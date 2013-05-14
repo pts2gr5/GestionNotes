@@ -1,0 +1,103 @@
+
+
+table {
+	border:solid 1px #BDBDBD;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	padding: 0;
+}
+.tableauTailleMax {
+	width:100%;
+}
+
+.tableauTailleMini {
+	width:70%;
+	float:left;
+}
+
+/* Petit formulaire à droite du tableau pour ajouter une note */
+
+#ajouterUneNoteACoteDuTableau {
+	margin-left:10px;
+	float:right;
+	width:150px;
+	
+	border:1px solid #CDCDCD;
+	padding:10px;
+	font-size: 15px;
+	text-align: center;
+}
+
+#ajouterUneNoteACoteDuTableau span{
+	width:100%;
+	font-size:16px;
+	font-weight:bold;
+	margin-bottom: 30px;
+	color:#6E6E6E;
+	clear: both;
+	
+}
+#ajouterUneNoteACoteDuTableau form label{
+	
+	font-size:15px;
+}
+table tr {
+	background-color: #FBFBFB;
+}
+
+table tr td {
+	border-bottom:1px solid #BDBDBD;
+	padding:3px 10px;
+	text-align: center;
+		font-size: 15px;
+	
+}
+
+table .entete {
+	background-color: #56A8E7;
+	height:30px;
+	
+	font-size:18px;
+	color:white;
+}
+
+.clickable:ACTIVE {
+	background-color: #8DC6EF;
+}
+.clickable:hover {
+	cursor: pointer;
+}
+.hoverable:hover {
+	background-color: #EBEBEB;
+}
+
+.UE {
+	font-weight:bold;
+	text-align: left;
+}
+
+.MODULE {
+	text-indent:20px;
+	text-align: left;
+	font-size: 17px;
+}
+
+.MATIERE {
+	text-indent:50px;
+	font-style: italic;
+	font-size: 15px;
+	text-align: left;
+}
+
+.good {
+color:green;	
+}
+
+.medium {
+	color:orange;
+}
+
+.bad {
+	color:red;
+}
