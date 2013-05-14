@@ -32,7 +32,7 @@ class Application
      *
      * @param array $config Configuration de l'application
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         // Affiche toutes les erreurs
         error_reporting(E_ALL);
@@ -47,6 +47,7 @@ class Application
         else
             $this->config = $config = parse_ini_file($config_file, true);
         */
+        $this->config = $config;
         
         // Chargement automatique des classes
         spl_autoload_register(array($this, 'autoload'));
@@ -122,7 +123,7 @@ class Application
      */
     public function autoload($class)
     {
-        $file = __DIR__.'/../'.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+        $file = $this->config['path']['src'].'/'.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
         return ( file_exists($file) && include_once($file) );
     } 
     
