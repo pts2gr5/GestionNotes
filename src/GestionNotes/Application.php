@@ -97,6 +97,11 @@ class Application
             // admin => AdminController::indexAction()
             $action = 'indexAction';
         
+        // On y ajoute le namespace
+        // Comme piste d'amélioration, définir un fichier avec les routes
+        $controller = __NAMESPACE__.'\\Controller\\'.$controller;
+        
+        // On vérifie si le controlleur existe et si la méthode souhaitée y est définie.
         if ( ! (class_exists($class = $controller) && method_exists($this->controller = new $class($this), $action) ) ) {
             // Envoie un code d'erreur 404 au navigateur
             // Selon le navigateur, il y aura soit le message 'Page non trouvée' (Firefox, Chrome) soit une page

@@ -21,10 +21,12 @@ $config['db']['password']   = '';
 $config['db']['charset']    = 'UTF-8';
 
 // Configuration des chemins
-$config['path']['root']     = realpath(__DIR__.'/../');
+$config['path']['root']     = __DIR__.'/../';
 $config['path']['views']    = __DIR__.'/views';
 $config['path']['src']      = $config['path']['root'].'/src';
 
 // Réglages avancées
 $config['debug']            = true;         // Affiche les erreurs
 $config['url_rewriting']    = true;         // Active la réécriture d'URLs
+
+return $config;

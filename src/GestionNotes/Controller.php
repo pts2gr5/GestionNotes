@@ -5,6 +5,7 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
+namespace GestionNotes;
 
 /**
  * Classe abstraite pour les contrôlleurs
@@ -39,7 +40,7 @@ abstract class Controller
     
         // Place le contenu du template dans une variable
         ob_start();
-        include($view_path.$template.'.php');
+        include($view_path.'/'.$template.'.php');
         $content = ob_get_clean();
         
         return $content;
