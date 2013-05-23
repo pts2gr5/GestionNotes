@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<title>Titre de la page</title>
+	<title><?php echo $title; ?></title>
 
 	<link rel="stylesheet" type="text/css" media="screen" href="css/structure.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
@@ -24,7 +24,7 @@
 	</div>
 </div>
 <div id="middle">
-	
+	<?php echo $content ?>
 </div>
 <div id="footer">
 <div id="footer-container">

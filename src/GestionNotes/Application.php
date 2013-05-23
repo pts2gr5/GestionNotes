@@ -25,28 +25,29 @@ class Application
     protected $db;
     
     /** @var GestionNotes\User */
-    protected $user;
+    protected $visitor;
     
     /**
      * Constructeur
      *
      * @param array $config Configuration de l'application
      */
-    public function __construct(array $config)
+    public function __construct(array $config = array())
     {
         // Affiche toutes les erreurs
         error_reporting(E_ALL);
         ini_set('display_errors', true);
         
         // Charge le fichier de configuration
-        /*
-        if ( ! file_exists($config_file = dirname($_SERVER['SCRIPT_FILENAME']) . '/config.ini.php') )
-            throw new RuntimeException('Fichier de configuration manquant');
-        elseif ( ! (is_file($config_file) && is_readable($config_file)) )
-            throw new RuntimeException('Impossible de lire le fichier de configuration');
-        else
-            $this->config = $config = parse_ini_file($config_file, true);
-        */
+        if ( count($config) == 0 )
+        {
+            if ( ! file_exists($config_file = dirname($_SERVER['SCRIPT_FILENAME']) . '/config.ini.php') )
+                throw new RuntimeException('Fichier de configuration manquant');
+            elseif ( ! (is_file($config_file) && is_readable($config_file)) )
+                throw new RuntimeException('Impossible de lire le fichier de configuration');
+            else
+                $config = parse_ini_file($config_file, true);
+        }
         $this->config = $config;
         
         // Chargement automatique des classes
@@ -60,10 +61,7 @@ class Application
         Model::setDbAdapter($db);
         
         // Gestion des sessions/utilisateurs
-        //$this->user = new User();
-        
-        // Rend l'object accessible depuis Template
-        //Template::setApplication($this);
+        $this->user = new Visitor();
     }
     
     /**
@@ -138,6 +136,6 @@ class Application
     /** @return GestionNotes\Controller */
     public function getController() { return $this->controller; }
     
-    /** @return GestionNotes\User */
-    public function getUser() { return $this->user; }
+    /** @return GestionNotes\Visitor */
+    public function getVisitor() { return $this->visitor; }
 }

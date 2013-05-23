@@ -16,6 +16,7 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('layout');
+        $this->url('foo');
+        return $this->renderPage('index');
     }
 }

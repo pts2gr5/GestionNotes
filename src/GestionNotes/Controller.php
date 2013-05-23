@@ -29,7 +29,7 @@ abstract class Controller
      * @param array $params
      * @return string
      */
-    public function render($template, array $params = array())
+    public function render($template, array & $params = array())
     {
         // Détermine le chemin des templates
         $config = $this->app->getConfig();
@@ -44,5 +44,34 @@ abstract class Controller
         $content = ob_get_clean();
         
         return $content;
-    }     
+    }
+    
+    /**
+     * Effectue le rendu d'une page
+     *
+     * @param string $template
+     * @param array $params
+     * @return string
+     */
+    public function renderPage($template, array & $params = array())
+    {
+        $config = $this->app->getConfig();
+        
+        $params['title']    = $config['school']['name'];
+        $params['content']  = $this->render($template, $params);
+        
+        return $this->render('layout', $params);
+    } 
+    
+    /**
+     * Génère une URL
+     *
+     * @param string $page
+     * @param array  $params
+     * @return string
+     */
+    public function url($page, array $params = array())
+    {
+        return $_SERVER['SCRIPT_NAME'] . '?' . http_build_query(array_merge(array('r' => $page, $params)));
+    } 
 }
