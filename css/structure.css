@@ -65,7 +65,7 @@ a:hover {
 }
 
 #partieDroite_parametre span {
-	margin-left:8px;
+	margin:0 4px;
 	
 }
 
@@ -182,19 +182,23 @@ margin-right:5%;
 /* --------------------- FOOTER --------------------- */
 
 #footer {
-	padding:12px 30px 0px 30px;;
-	margin:20px auto;
-	height:32px;
-	width:50%;
-	border:1px solid black;
+    position:absolute;
+    bottom:0;
+	height:46px;
+	width:100%;
 	clear:both;
-	border:solid 1px #E9E9E9;
+	border: 0 1px solid #E9E9E9;
 	background-color:#EFEFEF;
+    /*
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
+    */
 	color:#8A8A8A;
 	opacity:0.9;
+}
+#footer-container {
+    padding:12px 30px;
 }
 #footer:hover {
 	background-color:#EEEEEE;

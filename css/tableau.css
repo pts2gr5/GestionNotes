@@ -1,5 +1,3 @@
-
-
 table {
 	border:solid 1px #BDBDBD;
 	-moz-border-radius: 6px;
@@ -16,7 +14,7 @@ table {
 	float:left;
 }
 
-/* Petit formulaire à droite du tableau pour ajouter une note */
+/* Petit formulaire Ã  droite du tableau pour ajouter une note */
 
 #ajouterUneNoteACoteDuTableau {
 	margin-left:10px;
