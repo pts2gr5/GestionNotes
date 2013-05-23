@@ -116,3 +116,39 @@ box-shadow: 1px 1px 1px #666;
 	background-color: #FFECD9;
 	color:#494949;
 }
+
+
+/******************************* PAGE DE CONNEXION ************************************/
+
+.login-box {
+    border: 2px solid #eee;
+    margin: 0 auto;
+    padding: 30px 15px;
+    text-align: center;
+    width: 30%;
+    min-width: 450px;
+    max-width: 550px;
+}
+
+.login-box tr:first-child { width: 30%; }
+.login-box tr:last-child { width: 70%; }
+
+.login-box h2 {
+    font-size: x-large;
+}
+
+.login-box label,
+.login-box input { margin: 15px auto; }
+
+.login-box tr,
+.login-box td {
+    background-color: transparent;
+    border: 0;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+.login-box .errors {
+    color: red;
+    list-style-position: inside;
+}

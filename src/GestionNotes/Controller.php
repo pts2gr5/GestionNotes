@@ -64,6 +64,26 @@ abstract class Controller
     } 
     
     /**
+     * Affiche un simple message d'information
+     *
+     * @param string $message
+     * @param string $redirect
+     * @return string
+     */
+    public function showMessage($message, $redirect = null)
+    {
+        $config = $this->app->getConfig();
+        
+        $params['title']    = $config['school']['name'];
+        $params['content']  = $message;
+        
+        if ( $redirect != null )
+            $params['content'] .= '<meta http-equiv="Refresh" content="3;url='.$redirect.'" />';
+        
+        return $this->render('layout', $params);
+    }
+    
+    /**
      * Génère une URL
      *
      * @param string $page

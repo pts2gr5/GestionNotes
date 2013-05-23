@@ -24,7 +24,7 @@ class Application
     /** @var PDO */
     protected $db;
     
-    /** @var GestionNotes\User */
+    /** @var GestionNotes\Visitor */
     protected $visitor;
     
     /**
