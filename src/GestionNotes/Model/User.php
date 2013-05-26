@@ -76,13 +76,13 @@ class User extends AbstractModel
     // ------------------------- OPERATIONS DE LECTURE ------------------------- //
     
     /**
-     * Récupère un utilisateur en l'identifiant
+     * Récupère un utilisateur à parti de ses identifiants
      *
      * @param string $username
      * @param string $password
      * @return object
      */
-    public static function fetchByCredentials($username, $password)
+    public static function fetchOneByCredentials($username, $password)
     {
         $sth = self::$db->prepare('
             SELECT u.user_id AS id, u.username AS name, u.email, /* u.password,
@@ -106,6 +106,38 @@ class User extends AbstractModel
             return self::exchange($data);
         else
             return false;
-    } 
-     
+    }
+    
+    /**
+     * Récupère un utilisateur à partir de son ID
+     *
+     * @param string $username
+     * @return object
+     */
+    public static function fetchOneByName($username)
+    {
+        $sth = self::$db->prepare('
+            SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
+                u.last_name AS lastName, u.apogee_code AS apogee,
+                u.formation_id AS formation, u.followed_students AS followedStudents
+            FROM users AS u
+            WHERE (
+                    u.username = LOWER(:username)
+                    OR u.email = LOWER(:username)
+                )
+            LIMIT 0,1
+        ');
+        
+        $sth->bindParam(':username', $username, \PDO::PARAM_STR, 45);
+        $sth->execute();
+        
+        if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )
+            return self::exchange($data);
+        else
+            return false;
+    }
+    
+    // ------------------------- OPERATIONS DE MODIFICATION ------------------------- //
+    
+    // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
 }

@@ -8,6 +8,7 @@
 namespace GestionNotes\Controller;
 
 use GestionNotes\Controller;
+use GestionNotes\Model\User;
  
 class IndexController extends Controller
 {
@@ -16,6 +17,8 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
+        $model = User::fetchOneByCredentials('admin','secret');
+        var_dump($model);
         return $this->renderPage('index');
     }
 }
