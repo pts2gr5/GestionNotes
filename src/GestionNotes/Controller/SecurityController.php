@@ -8,6 +8,7 @@
 namespace GestionNotes\Controller;
 
 use GestionNotes\Controller;
+use GestionNotes\Model\User;
  
 class SecurityController extends Controller
 {
@@ -41,6 +42,7 @@ class SecurityController extends Controller
                 if ( ! $user = User::fetchOneByCredentials($username, $password) )
                     $errors[] = 'Erreur d\'authentification';
             }
+            
             
             $params['errors'] = &$errors;
         }
