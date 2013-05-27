@@ -9,6 +9,7 @@ namespace GestionNotes\Controller;
 
 use GestionNotes\Controller;
 use GestionNotes\Model\User;
+use GestionNotes\Visitor;
  
 class SecurityController extends Controller
 {
@@ -18,6 +19,11 @@ class SecurityController extends Controller
     public function loginAction()
     {
         $params = array();
+        
+        if ( $this->app->getVisitor()->isLogged() ) {
+            header('Location: '.$_SERVER['SCRIPT_NAME']);
+            exit;
+        }
         
         if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
         {
@@ -34,6 +40,7 @@ class SecurityController extends Controller
                 $errors[] = 'Le mot de passe est manquant';
             
             // Tente de s'identifier s'il n'y a pas d'erreur
+            
             if ( ! $errors )
             {
                 $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
@@ -41,8 +48,12 @@ class SecurityController extends Controller
                 
                 if ( ! $user = User::fetchOneByCredentials($username, $password) )
                     $errors[] = 'Erreur d\'authentification';
+                else {
+                    $this->app->getVisitor()->login($user);
+                    header('Location: '.$_SERVER['SCRIPT_NAME']);
+                    exit;
+                }
             }
-            
             
             $params['errors'] = &$errors;
         }
@@ -55,6 +66,7 @@ class SecurityController extends Controller
      */
     public function logoutAction()
     {
-    
+        $this->app->getVisitor()->logout();
+        header('Location: '.$this->url('security/login'));
     } 
 }

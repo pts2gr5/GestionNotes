@@ -61,7 +61,7 @@ class Application
         Model::setDbAdapter($db);
         
         // Gestion des sessions/utilisateurs
-        $this->user = new Visitor();
+        $this->visitor = new Visitor();
     }
     
     /**

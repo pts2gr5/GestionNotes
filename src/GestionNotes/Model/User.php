@@ -109,7 +109,7 @@ class User extends AbstractModel
     }
     
     /**
-     * Récupère un utilisateur à partir de son ID
+     * Récupère un utilisateur à partir de son nom / email
      *
      * @param string $username
      * @return object
@@ -129,6 +129,32 @@ class User extends AbstractModel
         ');
         
         $sth->bindParam(':username', $username, \PDO::PARAM_STR, 45);
+        $sth->execute();
+        
+        if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )
+            return self::exchange($data);
+        else
+            return false;
+    }
+    
+    /**
+     * Récupère un utilisateur à partir de son ID
+     *
+     * @param int $userId
+     * @return object
+     */
+    public static function fetchOneById($userId)
+    {
+        $sth = self::$db->prepare('
+            SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
+                u.last_name AS lastName, u.apogee_code AS apogee,
+                u.formation_id AS formation, u.followed_students AS followedStudents
+            FROM users AS u
+            WHERE u.user_id = :userid
+            LIMIT 0,1
+        ');
+        
+        $sth->bindParam(':userid', $userId, \PDO::PARAM_INT);
         $sth->execute();
         
         if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )

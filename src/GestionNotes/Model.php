@@ -96,7 +96,7 @@ abstract class Model implements \ArrayAccess, \Serializable
         if ( ! property_exists($this, $offset) )
             throw new \InvalidArgumentException('Champ invalide: '.$offset);
         
-        return $this->{$offset} = $value;
+        return $this->{$offset};
     }
     
     // ---------------------- @implements \Serializable -----------------------  //
