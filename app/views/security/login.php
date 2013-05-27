@@ -17,7 +17,7 @@
     <?php endif ?>
     <tr>
         <td><label for="username">Nom d'utilisateur:</label></td>
-        <td><input type="text" name="username" placeholder="Nom d'utilisateur" /></td>
+        <td><input type="text" name="username" placeholder="Nom d'utilisateur" value="<?php echo isset($username) ? $username : '' ?>" /></td>
     </tr>
     <tr>
         <td><label for="password">Mot de passe:</label></td>
