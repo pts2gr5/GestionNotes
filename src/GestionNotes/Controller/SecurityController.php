@@ -68,5 +68,20 @@ class SecurityController extends Controller
     {
         $this->app->getVisitor()->logout();
         header('Location: '.$this->url('security/login'));
+    }
+    
+    /**
+     * Affiche les préférences de l'utilisateur
+     */
+    public function profileAction()
+    {
+        // Gestion des permissions
+        
+        if ( ! $this->app->getVisitor()->isLogged() ) {
+            header('Location: '.$this->url('security/login'));
+            exit();
+        }
+        
+        return $this->renderPage('security/profile');
     } 
 }

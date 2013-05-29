@@ -17,8 +17,6 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        $model = User::fetchOneByCredentials('admin','secret');
-        var_dump($model);
         return $this->renderPage('index');
     }
 }
