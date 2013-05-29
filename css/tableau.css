@@ -14,6 +14,10 @@ table {
 	float:left;
 }
 
+table input {
+max-width: 100%;
+}
+
 /* Petit formulaire à droite du tableau pour ajouter une note */
 
 #ajouterUneNoteACoteDuTableau {

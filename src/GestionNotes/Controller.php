@@ -7,11 +7,17 @@
  */
 namespace GestionNotes;
 
+use GestionNotes\Controller\SecurityController;
+
 /**
  * Classe abstraite pour les contrôlleurs
  */ 
 abstract class Controller
 {
+    protected $app;
+    protected $config;
+    protected $visitor;
+    
     /**
      * Constructeur
      *
@@ -20,6 +26,13 @@ abstract class Controller
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->config = $app->getConfig();
+        $this->visitor = $app->getVisitor();
+        
+        // Seul le contrôlleur pour l'authentification peut être accessible
+        // aux visiteurs
+        if ( ! ($this->visitor->isLogged() || $_SERVER['REQUEST_URI'] == $this->url('security/login')) )
+            $this->redirect($this->url('security/login'));
     } 
     
     /** 
@@ -32,7 +45,7 @@ abstract class Controller
     public function render($template, array & $params = array())
     {
         // Détermine le chemin des templates
-        $config = $this->app->getConfig();
+        $config = $this->config;
         $view_path = $config['path']['views'];
         
         // Rend les variables disponibles au template
@@ -82,6 +95,19 @@ abstract class Controller
         
         return $this->render('layout', $params);
     }
+    
+    /**
+     * Redirige vers une autre page
+     *
+     * @param string $url
+     * @return void
+     */
+    public function redirect($url)
+    {
+        ob_get_clean();
+        header('Location: '.$url);
+        exit();
+    } 
     
     /**
      * Génère une URL

@@ -29,13 +29,13 @@ box-shadow: 1px 1px 1px #666;
 
 #menuGauche {
 	
-	width:182px;
+	width:222px;
 	
 	
 }
 .menu {
 	
-	width:180px;
+	width:220px;
 	height:auto;
 	border:1px solid #E4E4E4;
 	margin-bottom:40px;
@@ -148,7 +148,7 @@ box-shadow: 1px 1px 1px #666;
     border-collapse: collapse;
 }
 
-.login-box .errors {
+.errors {
     color: red;
     list-style-position: inside;
 }

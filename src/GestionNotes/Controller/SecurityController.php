@@ -20,10 +20,8 @@ class SecurityController extends Controller
     {
         $params = array();
         
-        if ( $this->app->getVisitor()->isLogged() ) {
-            header('Location: '.$_SERVER['SCRIPT_NAME']);
-            exit;
-        }
+        if ( $this->app->getVisitor()->isLogged() )
+            $this->redirect($this->url('security/login'));
         
         if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
         {
@@ -67,7 +65,7 @@ class SecurityController extends Controller
     public function logoutAction()
     {
         $this->app->getVisitor()->logout();
-        header('Location: '.$this->url('security/login'));
+        $this->redirect($this->url('security/login'));
     }
     
     /**
@@ -75,13 +73,45 @@ class SecurityController extends Controller
      */
     public function profileAction()
     {
-        // Gestion des permissions
+        $params = array();
         
-        if ( ! $this->app->getVisitor()->isLogged() ) {
-            header('Location: '.$this->url('security/login'));
-            exit();
+        if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
+        {
+            if ( isset($_POST['editpassword']) && $_POST['editpassword'] )
+            {
+                $errors = array();
+            
+                // Vérification des données saisies
+            
+                if ( ! isset($_POST['password']) || ! $_POST['password'] )
+                    $errors[] = 'Le mot de passe est manquant';
+                elseif ( strlen($_POST['password']) < 6 )
+                    $errors[] = 'Le mot de passe est trop court';
+                elseif ( $_POST['password'] == $this->visitor['name'] )
+                    $errors[] = 'Le mot de passe ne peut pas être égal au nom d\'utilisateur';
+                elseif ( strpos($_POST['password'], $this->visitor['name']) !== false )
+                    $errors[] = 'Le mot de passe ne peut être pas comprendre le nom d\'utilisateur';
+            
+                if ( ! isset($_POST['password_confirm']) || ! $_POST['password_confirm'] )
+                    $errors[] = 'La confirmation du mot de passe est manquant';
+                
+                if ( (isset($_POST['password']) ? $_POST['password'] : '')
+                        != (isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '') )
+                    $errors[] = 'Les deux champs ne sont pas identiques';
+            
+                // Tente de s'identifier s'il n'y a pas d'erreur
+            
+                if ( ! $errors )
+                {
+                    $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);    
+                    $this->visitor->getUser()->changePassword($password);
+                    $this->visitor->logout();
+                }
+            
+                $params['errors'] = &$errors;
+            }
         }
         
-        return $this->renderPage('security/profile');
+        return $this->renderPage('security/profile', $params);
     } 
 }

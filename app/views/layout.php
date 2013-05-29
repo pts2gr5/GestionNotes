@@ -1,3 +1,7 @@
+<?php
+namespace GestionNotes;
+use GestionNotes\Model\User;
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -15,7 +19,7 @@
 <body>
 
 <div id="header">
-	<div id="header_logo"></div>
+	<a href="<?php echo $this->url('') ?>" id="header_logo"></a>
 	<div id="header_partieDroite">
 		<div id="partieDroite_parametre">
             <?php if ( $this->app->getVisitor()->isLogged() ): ?>
@@ -27,17 +31,26 @@
 	</div>
 </div>
 <div id="middle">
-    <?php if ( $this->app->getVisitor()->isLogged() ): ?>
+    <?php if ( $this->visitor->isLogged() ): ?>
 	<div id="menuGauche">
 		<div class="menu">
 			<div class="moduleTitre"><span>Menu</span></div>
-			<div class="moduleCorps"> 
-				<ul>
-					<li class="moduleCorps_titreListeAPuce"><a href="#">Menu 1</a></li>
-					<li class="moduleCorps_listeAPuce"><a href="#">Menu 1.1</a></li>
-					<li class="moduleCorps_listeAPuce"><a href="#">Menu 1.2</a></li>
-					<li class="moduleCorps_titreListeAPuce"><a href="#">Menu 1</a></li>
-				</ul>
+			<div class="moduleCorps">
+                <ul>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('') ?>">Accueil</a></li>
+                    <?php if ( $this->visitor['type'] == User::TYPE_ADMIN ): ?>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/students') ?>">Gérer les étudiants</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/formations') ?>">Gérer les formations</a></li>
+                    <?php elseif ( $this->visitor['type'] == User::TYPE_DIRETUDE ):  ?>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/moyennes') ?>">Consulter les moyennes</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/resultats') ?>">Consulter les résultats</a></li>
+                    <?php elseif ( $this->visitor['type'] == User::TYPE_ETUDIANT ): ?>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/moyennes') ?>">Consulter les moyennes</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/notes') ?>">Gestion des notes</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('student/addnote') ?>">Ajouter une note</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/simulations') ?>">Gestion des simulations</a></li>
+                    <?php endif ?>
+                </ul>
 			</div>
 		</div>
     </div>

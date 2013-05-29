@@ -86,7 +86,7 @@ class User extends AbstractModel
     {
         $sth = self::$db->prepare('
             SELECT u.user_id AS id, u.username AS name, u.email, /* u.password,
-                u.password_salt AS salt, */ u.first_name AS firstName,
+                u.password_salt AS salt, */ u.first_name AS firstName, u.type,
                 u.last_name AS lastName, u.apogee_code AS apogee,
                 u.formation_id AS formation, u.followed_students AS followedStudents
             FROM users AS u
@@ -118,7 +118,7 @@ class User extends AbstractModel
     {
         $sth = self::$db->prepare('
             SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
-                u.last_name AS lastName, u.apogee_code AS apogee,
+                u.last_name AS lastName, u.apogee_code AS apogee, u.type,
                 u.formation_id AS formation, u.followed_students AS followedStudents
             FROM users AS u
             WHERE (
@@ -147,7 +147,7 @@ class User extends AbstractModel
     {
         $sth = self::$db->prepare('
             SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
-                u.last_name AS lastName, u.apogee_code AS apogee,
+                u.last_name AS lastName, u.apogee_code AS apogee, u.type,
                 u.formation_id AS formation, u.followed_students AS followedStudents
             FROM users AS u
             WHERE u.user_id = :userid
@@ -164,6 +164,28 @@ class User extends AbstractModel
     }
     
     // ------------------------- OPERATIONS DE MODIFICATION ------------------------- //
+    
+    /**
+     * Modifie un mot de passe à partir de l'ID utilisateur
+     *
+     * @param string $password
+     * @return boolean
+     */
+    public function changePassword($password)
+    {
+        $sth = self::$db->prepare('
+            UPDATE users AS u
+            SET u.password =  MD5(CONCAT( MD5(:password), u.password_salt ))
+            WHERE u.user_id = :userid
+        ');
+        
+        $id = $this['id'];
+        
+        $sth->bindParam(':password', $password, \PDO::PARAM_STR);
+        $sth->bindParam(':userid', $id, \PDO::PARAM_INT);
+        
+        return $sth->execute();
+    } 
     
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
 }
