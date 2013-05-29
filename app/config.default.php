@@ -21,8 +21,8 @@ $config['db']['password']   = '';
 $config['db']['charset']    = 'UTF-8';
 
 // Configuration des chemins
-$config['path']['root']     = __DIR__.'/../';
-$config['path']['views']    = __DIR__.'/views';
+$config['path']['root']     = dirname(__FILE__).'/../';
+$config['path']['views']    = dirname(__FILE__).'/views';
 $config['path']['src']      = $config['path']['root'].'/src';
 
 // Réglages avancées

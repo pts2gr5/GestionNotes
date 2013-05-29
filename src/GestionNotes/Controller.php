@@ -5,14 +5,11 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes;
-
-use GestionNotes\Controller\SecurityController;
 
 /**
  * Classe abstraite pour les contrôlleurs
  */ 
-abstract class Controller
+abstract class GestionNotes_Controller
 {
     protected $app;
     protected $config;
@@ -23,17 +20,22 @@ abstract class Controller
      *
      * @param Application $app
      */
-    public function __construct(Application $app)
+    public function __construct(GestionNotes_Application $app)
     {
         $this->app = $app;
         $this->config = $app->getConfig();
         $this->visitor = $app->getVisitor();
         
+        $this->init();
+    } 
+    
+    protected function init()
+    {
         // Seul le contrôlleur pour l'authentification peut être accessible
         // aux visiteurs
-        if ( ! ($this->visitor->isLogged() || $_SERVER['REQUEST_URI'] == $this->url('security/login')) )
+        if ( ! $this->visitor->isLogged() )
             $this->redirect($this->url('security/login'));
-    } 
+    }
     
     /** 
      * Effectue le rendu d'un template

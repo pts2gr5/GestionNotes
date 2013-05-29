@@ -5,12 +5,8 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes\Controller;
-
-use GestionNotes\Controller;
-use GestionNotes\Model\User;
  
-class IndexController extends Controller
+class GestionNotes_Controller_IndexController extends GestionNotes_Controller
 {
     /**
      * Dit bonjour !

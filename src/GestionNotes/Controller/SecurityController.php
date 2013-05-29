@@ -5,13 +5,8 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes\Controller;
 
-use GestionNotes\Controller;
-use GestionNotes\Model\User;
-use GestionNotes\Visitor;
- 
-class SecurityController extends Controller
+class GestionNotes_Controller_SecurityController extends GestionNotes_Controller
 {
     /**
      * Authentification de l'utilisateur
@@ -44,7 +39,7 @@ class SecurityController extends Controller
                 $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
                 $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
                 
-                if ( ! $user = User::fetchOneByCredentials($username, $password) )
+                if ( ! $user = GestionNotes_Model_User::fetchOneByCredentials($username, $password) )
                     $errors[] = 'Erreur d\'authentification';
                 else {
                     $this->app->getVisitor()->login($user);
@@ -74,6 +69,9 @@ class SecurityController extends Controller
     public function profileAction()
     {
         $params = array();
+        
+        if ( ! $this->visitor->isLogged() )
+            $this->redirect($this->url('security/login'));
         
         if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
         {
@@ -106,6 +104,7 @@ class SecurityController extends Controller
                     $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);    
                     $this->visitor->getUser()->changePassword($password);
                     $this->visitor->logout();
+                    $this->redirect($this->url('security/login'));
                 }
             
                 $params['errors'] = &$errors;
@@ -114,4 +113,6 @@ class SecurityController extends Controller
         
         return $this->renderPage('security/profile', $params);
     } 
+    
+    protected function init() {}
 }

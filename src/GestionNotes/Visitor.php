@@ -5,14 +5,11 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes;
-
-use GestionNotes\Model\User;
 
 /**
  * Représente un utilisateur connecté
  */
-class Visitor implements \ArrayAccess
+class GestionNotes_Visitor implements ArrayAccess
 {
     protected $user;
     
@@ -23,13 +20,13 @@ class Visitor implements \ArrayAccess
         
         if ( isset($_SESSION['user_id']) && intval($_SESSION['user_id']) > 0 )
         {
-            $user = User::fetchOneById(intval($_SESSION['user_id']));
+            $user = GestionNotes_Model_User::fetchOneById(intval($_SESSION['user_id']));
             if ( $user ) $this->login( $user );
             else $this->logout();
         }
     }
     
-    public function login(User $user)
+    public function login(GestionNotes_Model_User $user)
     {
         $_SESSION['user_id'] = $user['id'];
         $this->user = $user;
@@ -43,7 +40,7 @@ class Visitor implements \ArrayAccess
     
     public function isLogged()
     {
-        return ( $this->user instanceof User );
+        return ( $this->user instanceof GestionNotes_Model_User );
     }
     
     public function getUser()

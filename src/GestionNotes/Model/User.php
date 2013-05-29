@@ -5,15 +5,14 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes\Model;
-
-use GestionNotes\Model as AbstractModel;
 
 /**
  * Représente un étudiant
  */
-class User extends AbstractModel
+class GestionNotes_Model_User extends GestionNotes_Model
 {
+    protected static $__CLASS__ = 'GestionNotes_Model_User';
+    
     const TYPE_ADMIN        = 1;
     const TYPE_DIRETUDE     = 2;
     const TYPE_ETUDIANT     = 3;
@@ -98,11 +97,11 @@ class User extends AbstractModel
             LIMIT 0,1
         ');
         
-        $sth->bindParam(':username', $username, \PDO::PARAM_STR, 45);
-        $sth->bindParam(':password', $password, \PDO::PARAM_STR);
+        $sth->bindParam(':username', $username, PDO::PARAM_STR, 45);
+        $sth->bindParam(':password', $password, PDO::PARAM_STR);
         $sth->execute();
         
-        if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )
+        if ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
             return self::exchange($data);
         else
             return false;
@@ -128,10 +127,10 @@ class User extends AbstractModel
             LIMIT 0,1
         ');
         
-        $sth->bindParam(':username', $username, \PDO::PARAM_STR, 45);
+        $sth->bindParam(':username', $username, PDO::PARAM_STR, 45);
         $sth->execute();
         
-        if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )
+        if ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
             return self::exchange($data);
         else
             return false;
@@ -154,10 +153,10 @@ class User extends AbstractModel
             LIMIT 0,1
         ');
         
-        $sth->bindParam(':userid', $userId, \PDO::PARAM_INT);
+        $sth->bindParam(':userid', $userId, PDO::PARAM_INT);
         $sth->execute();
         
-        if ( $data = $sth->fetch(\PDO::FETCH_ASSOC) )
+        if ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
             return self::exchange($data);
         else
             return false;
@@ -181,11 +180,21 @@ class User extends AbstractModel
         
         $id = $this['id'];
         
-        $sth->bindParam(':password', $password, \PDO::PARAM_STR);
-        $sth->bindParam(':userid', $id, \PDO::PARAM_INT);
+        $sth->bindParam(':password', $password, PDO::PARAM_STR);
+        $sth->bindParam(':userid', $id, PDO::PARAM_INT);
         
         return $sth->execute();
     } 
     
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
+    
+    public static function exchange(array $values)
+    {
+        $obj = new self();
+        
+        foreach ( $values as $name => $value )
+            $obj->offsetSet($name, $value);
+        
+        return $obj;
+    }
 }

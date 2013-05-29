@@ -5,15 +5,18 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes;
-
-use PDO;
-use RuntimeException;
+ 
+if(function_exists('lcfirst') === false) {
+    function lcfirst($str) {
+        $str[0] = strtolower($str[0]);
+        return $str;
+    }
+}
 
 /**
  * Classe principale de l'application.
  */
-class Application
+class GestionNotes_Application
 {
     /** @var array */
     protected $config;
@@ -58,10 +61,10 @@ class Application
             sprintf('mysql:host=%s;dbname=%s', $config['db']['host'], $config['db']['dbname']),
             $config['db']['user'], $config['db']['password'] );
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        Model::setDbAdapter($db);
+        GestionNotes_Model::setDbAdapter($db);
         
         // Gestion des sessions/utilisateurs
-        $this->visitor = new Visitor();
+        $this->visitor = new GestionNotes_Visitor();
     }
     
     /**
@@ -75,7 +78,7 @@ class Application
         
         // Petit nettoyage par défaut pour éviter de répéter ce code à la fois 
         // pour le controlleur et l'action
-        array_walk($parts, function (&$input) { $input = strtolower(trim(str_replace('-','_',$input))); });
+        array_walk($parts, array($this, 'sanitizeUrl'));
         
         // Le nom du controller se présente sous la forme FooController
         $controller = (count($parts) >= 1 && $parts[0]) ? 
@@ -97,7 +100,7 @@ class Application
         
         // On y ajoute le namespace
         // Comme piste d'amélioration, définir un fichier avec les routes
-        $controller = __NAMESPACE__.'\\Controller\\'.$controller;
+        $controller = 'GestionNotes_Controller_'.$controller;
         
         // On vérifie si le controlleur existe et si la méthode souhaitée y est définie.
         if ( ! (class_exists($class = $controller) && method_exists($this->controller = new $class($this), $action) ) ) {
@@ -118,6 +121,11 @@ class Application
         exit;
     }
     
+    protected function sanitizeUrl( & $input )
+    {
+        $input = strtolower(trim(str_replace('-','_',$input))); 
+    }
+    
     /**
      * Chargement automatique d'une classe
      *
@@ -126,7 +134,7 @@ class Application
      */
     public function autoload($class)
     {
-        $file = $this->config['path']['src'].'/'.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+        $file = $this->config['path']['src'].'/'.str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
         return ( file_exists($file) && include_once($file) );
     } 
     

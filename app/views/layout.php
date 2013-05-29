@@ -1,7 +1,3 @@
-<?php
-namespace GestionNotes;
-use GestionNotes\Model\User;
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -38,13 +34,13 @@ use GestionNotes\Model\User;
 			<div class="moduleCorps">
                 <ul>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('') ?>">Accueil</a></li>
-                    <?php if ( $this->visitor['type'] == User::TYPE_ADMIN ): ?>
+                    <?php if ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ADMIN ): ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/students') ?>">Gérer les étudiants</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/formations') ?>">Gérer les formations</a></li>
-                    <?php elseif ( $this->visitor['type'] == User::TYPE_DIRETUDE ):  ?>
+                    <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_DIRETUDE ):  ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/moyennes') ?>">Consulter les moyennes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/resultats') ?>">Consulter les résultats</a></li>
-                    <?php elseif ( $this->visitor['type'] == User::TYPE_ETUDIANT ): ?>
+                    <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ETUDIANT ): ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/moyennes') ?>">Consulter les moyennes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/notes') ?>">Gestion des notes</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('student/addnote') ?>">Ajouter une note</a></li>

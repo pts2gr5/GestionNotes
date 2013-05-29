@@ -5,14 +5,11 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes\Model;
-
-use GestionNotes\Model as AbstractModel;
 
 /**
  * Représente un étudiant
  */
-class User extends AbstractModel
+class GestionNotes_Model_User extends GestionNotes_Model
 {
     const TYPE_FORMATION        = 1;
     const TYPE_SEMESTRE         = 2;

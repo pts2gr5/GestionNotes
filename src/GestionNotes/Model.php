@@ -5,14 +5,11 @@
  * @copyright PTS2 Groupe 5
  * @license Redistribution interdite
  */
-namespace GestionNotes;
-
-use PDO;
 
 /**
  * Classe abstraite représentant un modèle
  */
-abstract class Model implements \ArrayAccess, \Serializable
+abstract class GestionNotes_Model implements ArrayAccess, Serializable
 {
     /** @var PDO */
     protected static $db;
@@ -43,16 +40,7 @@ abstract class Model implements \ArrayAccess, \Serializable
      * @param array Le nouveau tableau ou objet à utiliser.
      * @return self
      */
-    public static function exchange(array $values)
-    {
-        $class = get_called_class();
-        $obj = new $class();
-        
-        foreach ( $values as $name => $value )
-            $obj->offsetSet($name, $value);
-        
-        return $obj;
-    } 
+    public abstract static function exchange(array $values);
     
     // ---------------------- @implements \AccessAccess -----------------------  //
 
@@ -63,7 +51,7 @@ abstract class Model implements \ArrayAccess, \Serializable
     public function offsetSet($offset, $value)
     {
         if ( ! property_exists($this, $offset) )
-            throw new \UnexpectedValueException();
+            throw new UnexpectedValueException();
         
         if ( method_exists($this, $method = 'filter'.ucfirst($offset))
             && call_user_func(array($this, $method), $value) == false )
@@ -85,7 +73,7 @@ abstract class Model implements \ArrayAccess, \Serializable
      */
     public function offsetUnset($offset)
     {
-        throw new \RuntimeException('Impossible de supprimer un champ d\'un modèle.');
+        throw new RuntimeException('Impossible de supprimer un champ d\'un modèle.');
     }
     
     /**
@@ -94,7 +82,7 @@ abstract class Model implements \ArrayAccess, \Serializable
     public function offsetGet($offset)
     {
         if ( ! property_exists($this, $offset) )
-            throw new \InvalidArgumentException('Champ invalide: '.$offset);
+            throw new InvalidArgumentException('Champ invalide: '.$offset);
         
         return $this->{$offset};
     }
