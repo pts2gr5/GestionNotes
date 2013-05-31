@@ -51,13 +51,15 @@ abstract class GestionNotes_Model implements ArrayAccess, Serializable
     public function offsetSet($offset, $value)
     {
         if ( ! property_exists($this, $offset) )
-            throw new UnexpectedValueException();
+            //throw new UnexpectedValueException();
+            return;
         
         if ( method_exists($this, $method = 'filter'.ucfirst($offset))
             && call_user_func(array($this, $method), $value) == false )
             throw new InvalidArgumentException();
         
-        $this->{$offset} = $value;
+        // L'utilisation de utf8_encode semble être requis sur certaines configurations.
+        $this->{$offset} = is_string($value) ? utf8_encode($value) : $value;
     }
 
     /**

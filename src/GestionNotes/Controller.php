@@ -13,6 +13,7 @@ abstract class GestionNotes_Controller
 {
     protected $app;
     protected $config;
+    protected $params;
     protected $visitor;
     
     /**
@@ -24,6 +25,7 @@ abstract class GestionNotes_Controller
     {
         $this->app = $app;
         $this->config = $app->getConfig();
+        $this->params = array();
         $this->visitor = $app->getVisitor();
         
         $this->init();
@@ -51,6 +53,7 @@ abstract class GestionNotes_Controller
         $view_path = $config['path']['views'];
         
         // Rend les variables disponibles au template
+        extract($this->params);
         extract($params);
     
         // Place le contenu du template dans une variable
@@ -120,6 +123,6 @@ abstract class GestionNotes_Controller
      */
     public function url($page, array $params = array())
     {
-        return $_SERVER['SCRIPT_NAME'] . '?' . http_build_query(array_merge(array('r' => $page, $params)));
+        return $_SERVER['SCRIPT_NAME'] . '?' . http_build_query(array_merge(array('r' => $page), $params));
     } 
 }

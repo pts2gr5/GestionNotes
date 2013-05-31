@@ -72,6 +72,19 @@ class GestionNotes_Model_User extends GestionNotes_Model
      */
     protected $followedStudents;
     
+    /**
+     * @var array $values
+     */
+    public static function exchange(array $values)
+    {
+        $obj = new self();
+        
+        foreach ( $values as $name => $value )
+            $obj->offsetSet($name, $value);
+        
+        return $obj;
+    }
+    
     // ------------------------- OPERATIONS DE LECTURE ------------------------- //
     
     /**
@@ -187,14 +200,4 @@ class GestionNotes_Model_User extends GestionNotes_Model
     } 
     
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
-    
-    public static function exchange(array $values)
-    {
-        $obj = new self();
-        
-        foreach ( $values as $name => $value )
-            $obj->offsetSet($name, $value);
-        
-        return $obj;
-    }
 }
