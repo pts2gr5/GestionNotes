@@ -111,7 +111,8 @@ class GestionNotes_Application
             // Important car les navigateurs utilisent par défaut l'ISO-8859-1
             header('Content-Type: text/html; charset=utf-8');
             // Notre joli message à afficher (TODO: le rendre beau :p)
-            echo '<h1>Page non trouvée</h1>';
+            //echo '<h1>Page non trouvée</h1>';
+            echo GestionNotes_Controller::show404($this);
             // On veillera à arrêter le script à la fin pour éviter que d'autres actions s'effectuent.
             exit;
         }

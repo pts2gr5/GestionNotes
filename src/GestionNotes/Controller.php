@@ -33,7 +33,7 @@ abstract class GestionNotes_Controller
     
     protected function init()
     {
-        // Seul le contrôlleur pour l'authentification peut être accessible
+        // Seul le contrôleur pour l'authentification peut être accessible
         // aux visiteurs
         if ( ! $this->visitor->isLogged() )
             $this->redirect($this->url('security/login'));
@@ -113,6 +113,37 @@ abstract class GestionNotes_Controller
         header('Location: '.$url);
         exit();
     } 
+    
+    /**
+     * Gestion des pages inexistantes
+     */
+    public static function show404(GestionNotes_Application $app)
+    {
+        $obj = new GestionNotes_Controller_IndexController($app);
+        
+        $msg = '<h1 style="font-size:x-large;">Oops :(</h1>
+                <br />
+                <p>Impossible de trouver la page demandée.</p>';
+        
+        if ( ini_get('display_errors') && (error_reporting() & E_USER_ERROR) )
+        {
+            $page = htmlspecialchars_decode($_REQUEST['r'], ENT_QUOTES);
+            $params = print_r($_REQUEST, true);
+            $session = print_r($_SESSION, true);
+            $method = $_SERVER['REQUEST_METHOD'];
+        
+            $msg .= "
+                <br />
+                <p>
+                    <b>Page demandée:</b> $page<br /><br />
+                    <b>Paramètres:</b> <pre>$params</pre><br />
+                    <b>Session:</b> <pre>$session</pre><br />
+                    <b>Méthode:</b> $method
+                </p>";
+        }
+
+        return $obj->showMessage($msg);
+    }
     
     /**
      * Génère une URL
