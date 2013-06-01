@@ -4,10 +4,11 @@
     </div>
 </div>
 
-<div id="corps_contenu">
+<div id="corps_contenu">    
     <div id="corps_contenu_contenu">
+        <!-- liste des nodes -->
         <?php if ( is_array($nodes) && count($nodes) > 0 ): ?>
-        <table class="tableauTailleMax" cellspacing="0">
+        <table class="tableauTailleMini" cellspacing="0">
             <tr class="entete">
                 <td width="5%">#ID</td>
                 <td width="40%">Titre</td>
@@ -33,5 +34,19 @@
         <?php else: ?>
         Aucun enfant
         <?php endif ?>
+        <!-- / liste des nodes -->
+        
+        <!-- formulaire d'ajout node -->
+        <div id="ajouterUneNoteACoteDuTableau">
+            <span>Ajouter un élément</span>
+            <form method="post" action="<?php echo $this->url('admin/create-node') ?>">
+                <input type="hidden" name="parent_id" value="<?php echo $parent['id'] ?>">
+                <input type="hidden" name="node_type" value="<?php echo ($parent['type'] + 1) ?>">
+                <br/>
+                <label for="title">Intitulé :</label> <input class="INPUT_text" type="text" name="title"/><br/>
+                <input class="INPUT_submit" type="submit" value="Ajouter"/>
+            </form>
+        </div>
+        <!-- / formulaire d'ajout node -->
     </div>
 </div>

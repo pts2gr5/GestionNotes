@@ -31,6 +31,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         if ( $nodes = GestionNotes_Model_Node::fetchByParentNodeId($parentNodeId) )
         {
             $this->params['nodes'] = & $nodes;
+            $this->params['parent'] = $nodes['parent'];
             $this->params['list_title'] = $nodes['parent']['title'];
             unset($nodes['parent']);
         }
@@ -41,6 +42,19 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
             $this->params['list_title'] = $parentNode ? $parentNode['title'] : 'Element inconnu';
         }
         return $this->renderPage('admin/list-nodes');
+    }
+    
+    /**
+     * Ajoute un élément
+     */
+    public function create_nodeAction()
+    {
+        $parentNodeId = filter_var( $_POST['parent_id'], FILTER_SANITIZE_NUMBER_INT );
+        $nodeType     = filter_var( $_REQUEST['node_type'], FILTER_SANITIZE_NUMBER_INT );
+        $nodeTitle    = filter_var( $_REQUEST['title'], FILTER_SANITIZE_STRING );
+        
+        GestionNotes_Model_Node::createNode2($nodeTitle, $nodeType, $parentNodeId);
+        $this->redirect($this->url('admin/list-nodes', array('id'=>$parentNodeId)));
     } 
     
     protected function createListByNodeType(/* int */ $nodeType)
