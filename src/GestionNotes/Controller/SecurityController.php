@@ -88,10 +88,10 @@ class GestionNotes_Controller_SecurityController extends GestionNotes_Controller
                 elseif ( $_POST['password'] == $this->visitor['name'] )
                     $errors[] = 'Le mot de passe ne peut pas être égal au nom d\'utilisateur';
                 elseif ( strpos($_POST['password'], $this->visitor['name']) !== false )
-                    $errors[] = 'Le mot de passe ne peut être pas comprendre le nom d\'utilisateur';
+                    $errors[] = 'Le mot de passe ne peut pas comprendre le nom d\'utilisateur';
             
                 if ( ! isset($_POST['password_confirm']) || ! $_POST['password_confirm'] )
-                    $errors[] = 'La confirmation du mot de passe est manquant';
+                    $errors[] = 'La confirmation du mot de passe est manquante';
                 
                 if ( (isset($_POST['password']) ? $_POST['password'] : '')
                         != (isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '') )
