@@ -58,12 +58,12 @@
         <?php echo $content ?>
     <?php endif ?>
 </div>
+
 <div id="footer">
-<div id="footer-container">
 	<span id="footer_copyright">&copy Gestion des notes - IUT de Laval</span>
 	<span id="footer_groupe">PTS2 Groupe 5</span>
 </div>
-</div>
+
 
 </body>
 </html>

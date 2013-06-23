@@ -43,6 +43,29 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         }
         return $this->renderPage('admin/list-nodes');
     }
+    /**
+     * Liste des utilisateurs
+     * @return string
+     */
+    public function list_studentsAction()
+    {
+    	$parentNodeId = filter_var( $_REQUEST['id'], FILTER_SANITIZE_STRING );
+    	$this->params['show_parent_column'] = false;
+    	if ( $nodes = GestionNotes_Model_Node::fetchByParentNodeId($parentNodeId) )
+    	{
+    		$this->params['nodes'] = & $nodes;
+    		$this->params['parent'] = $nodes['parent'];
+    		$this->params['list_title'] = $nodes['parent']['title'];
+    		unset($nodes['parent']);
+    	}
+    	else
+    	{
+    		$parentNode = GestionNotes_Model_Node::fetchOneByNodeId($parentNodeId);
+    		$this->params['nodes'] = array();
+    		$this->params['list_title'] = $parentNode ? $parentNode['title'] : 'Element inconnu';
+    	}
+    	return $this->renderPage('admin/list-nodes');
+    }
     
     /**
      * Ajoute un élément

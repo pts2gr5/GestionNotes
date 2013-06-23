@@ -5,6 +5,7 @@ table {
 	border-radius: 6px;
 	padding: 0;
 }
+
 .tableauTailleMax {
 	width:100%;
 }
@@ -21,12 +22,12 @@ max-width: 100%;
 /* Petit formulaire à droite du tableau pour ajouter une note */
 
 #ajouterUneNoteACoteDuTableau {
+	rgba(255, 255, 213, 0.84);
 	margin-left:10px;
 	float:right;
 	width:150px;
-	
 	border:1px solid #CDCDCD;
-	padding:10px;
+	padding:10px 15px 10px 10px;
 	font-size: 15px;
 	text-align: center;
 }
@@ -40,12 +41,28 @@ max-width: 100%;
 	clear: both;
 	
 }
-#ajouterUneNoteACoteDuTableau form label{
+#ajouterUneNoteACoteDuTableau table{
+	width:100%;
+	margin:0;
+	padding:0;
+}
+#ajouterUneNoteACoteDuTableau table tr{
 	
 	font-size:15px;
+
 }
+#ajouterUneNoteACoteDuTableau table tr td{
+	
+	margin:0;
+	padding:0;
+}
+#ajouterUneNoteACoteDuTableau form label{
+	font-size:15px;
+	margin:px;
+}
+
 table tr {
-	background-color: #FBFBFB;
+	
 }
 
 table tr td {
@@ -102,4 +119,31 @@ color:green;
 
 .bad {
 	color:red;
+}
+
+.no-border {
+	border:none;
+}
+.no-border tr {
+	border:none;
+}
+.no-border td {
+	border:none;
+}
+
+.formulaire {
+	
+	border:none;
+	text-align:left;
+}
+.formulaire td{
+	background-color:none;
+	border:none;
+	text-align:left;
+}
+
+
+.formulaire select {
+background: url(../images/bottom-arrow.png) no-repeat 96% center;
+box-shadow: 0px 1px 1px #C7C7C7;
 }

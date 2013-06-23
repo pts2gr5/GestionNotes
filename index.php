@@ -7,7 +7,7 @@
  */
 
 // Patch pour le serveur HTTP de l'IUT
-$_SERVER['SCRIPT_NAME'] = '/12inf1pj05/'.$_SERVER['SCRIPT_NAME'];
+//$_SERVER['SCRIPT_NAME'] = '/12inf1pj05/'.$_SERVER['SCRIPT_NAME'];
 
 // Chargement de la configuration
 if ( ! file_exists($configFile = dirname(__FILE__).'/app/config.php') )

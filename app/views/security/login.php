@@ -24,7 +24,7 @@
         <td><input type="password" name="password" placeholder="Mot de passe" /></td>
     </tr>
     <tr>
-        <td colspan="2"><input type="submit" value="Se connecter" /></td>
+        <td colspan="2"><input class="INPUT_submit" type="submit" value="Se connecter" /></td>
     </tr>
 </tbody>
 </table>
