@@ -16,7 +16,7 @@ class GestionNotes_Controller_SecurityController extends GestionNotes_Controller
         $params = array();
         
         if ( $this->app->getVisitor()->isLogged() )
-            $this->redirect($this->url('security/login'));
+            $this->redirect($this->url('security/logout'));
         
         if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
         {
