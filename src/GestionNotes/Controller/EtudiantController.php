@@ -11,12 +11,9 @@
  */ 
 class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 {
-	
 	public function moyennesAction()
 	{
 		$this->params['list_title'] = 'Mes résultats';
+        return $this->renderPage('etudiant/moyennes');
 	}
-    
-   
-   
 }
