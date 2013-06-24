@@ -73,10 +73,10 @@ class GestionNotes_Model_Node extends GestionNotes_Model
                    p.node_id AS parent_id, IF( n.node_type = 6, n.coefficient, NULL) AS coefficient
             FROM nodes AS n
             LEFT JOIN nodes AS p ON n.parent_node_id = p.node_id
-            WHERE n.node_id = :node_id
+            WHERE n.node_type = :node_type
         ');
         
-        $sth->bindParam(':node_id', $nodeId, PDO::PARAM_INT, 45);
+        $sth->bindParam(':node_type', $nodeId, PDO::PARAM_INT, 45);
         $sth->execute();
         
         $nodes = array();
