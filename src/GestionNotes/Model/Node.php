@@ -70,7 +70,7 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         $sth = self::$db->prepare('
             SELECT n.node_id AS id, n.node_title AS title, n.node_type AS type,
                    n.parent_node_id AS parent, p.node_title AS parent_title,
-                   p.node_id AS parent_id, IF( n.node_type = 6, n.coefficient, NULL) AS coefficient
+                   p.node_id AS parent_id, IF( n.node_type = '.self::TYPE_EPREUVE.', n.coefficient, NULL) AS coefficient
             FROM nodes AS n
             LEFT JOIN nodes AS p ON n.parent_node_id = p.node_id
             WHERE n.node_type = :node_type
@@ -100,7 +100,7 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         $sth = self::$db->prepare('
             SELECT n.node_id AS id, n.node_title AS title, n.node_type AS type,
                    n.parent_node_id AS parent, p.node_title AS parent_title, p.node_type AS parent_type,
-                   p.node_id AS parent_id, IF( n.node_type = 6, n.coefficient, NULL) AS coefficient
+                   p.node_id AS parent_id, IF( n.node_type = '.self::TYPE_EPREUVE.', n.coefficient, NULL) AS coefficient
             FROM nodes AS n
             LEFT JOIN nodes AS p ON n.parent_node_id = p.node_id
             WHERE n.parent_node_id = :parent_node_id
@@ -128,7 +128,7 @@ class GestionNotes_Model_Node extends GestionNotes_Model
     {
         $sth = self::$db->prepare('
             SELECT n.node_id AS id, n.node_title AS title, n.node_type AS type,
-                   n.parent_node_id AS parent, IF( n.node_type = 6, n.coefficient, NULL) AS coefficient
+                   n.parent_node_id AS parent, IF( n.node_type = '.self::TYPE_EPREUVE.', n.coefficient, NULL) AS coefficient
             FROM nodes AS n
             WHERE n.node_id = :node_id
         ');
