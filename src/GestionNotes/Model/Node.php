@@ -142,6 +142,29 @@ class GestionNotes_Model_Node extends GestionNotes_Model
             return false;
     } 
     
+    /**
+     * Récupère toutes les épreuves d'une matière
+     *
+     * @param integer $nodeId
+     * @return object
+     */
+	public static function listeEpreuvesByMatiereID ($node_id)
+    {
+        $sth = self::$db->prepare('
+           SELECT n.note_id AS id, n.title AS title, n.coefficient as coefficient
+           FROM notes AS n
+           WHERE n.node_id = :node_id
+       ');
+       
+        $sth->bindParam(':node_id', $node_id, PDO::PARAM_INT );
+        $sth->execute();
+       
+        $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+                $result[] = self::exchange($data);
+        return $result;
+    }
+    
     // ------------------------- OPERATIONS DE MODIFICATION ------------------------- //
     
     /**
@@ -179,6 +202,17 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         if ( $coefficient )$sth->bindParam(':coefficient', $coefficient, PDO::PARAM_STR);   // Il n'existe pas de PDO::PARAM_FLOAT
         
         return $sth->execute();
+    }
+    
+    public static function ajouterNote($userId,$epreuveId, $note){
+    	$sth = self::$db->prepare('
+            INSERT IGNORE INTO `student_notes`(`user_id`, `note_id`, `student_note`) VALUES (:user_id,:node_id,:note)
+        ');
+    	
+    	$sth->bindParam(':user_id', $userId, PDO::PARAM_INT );
+    	$sth->bindParam(':node_id', $epreuveId, PDO::PARAM_INT );
+    	$sth->bindParam(':note', $note, PDO::PARAM_INT );
+    	return $sth->execute();
     }
     
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //

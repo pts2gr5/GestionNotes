@@ -8,7 +8,7 @@ $(document).ready(function () {
         var nodeType = selected.getAttribute('data-type');
         document.getElementById('node_type_label').innerHTML  =
         document.getElementById('node_title_input').placeholder = nodeLevels[parseInt(nodeType)+1];
-        if ( parseInt(nodeType) >= 5 ) {
+        if ( parseInt(nodeType) >= 5 ) { // 7: ID Epreuve
             document.getElementById('coefficient_input').style.visibility = 'visible';
             document.getElementById('coefficient_input').style.display = 'initial';
         } else {

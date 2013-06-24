@@ -41,10 +41,10 @@
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/moyennes') ?>">Consulter les moyennes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/resultats') ?>">Consulter les résultats</a></li>
                     <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ETUDIANT ): ?>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/moyennes') ?>">Consulter les moyennes</a></li>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/notes') ?>">Gestion des notes</a></li>
-                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('student/addnote') ?>">Ajouter une note</a></li>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('student/simulations') ?>">Gestion des simulations</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/moyennes') ?>">Consulter les moyennes</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/notes') ?>">Gestion des notes</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('etudiant/ajouternote') ?>">Ajouter une note</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/simulations') ?>">Gestion des simulations</a></li>
                     <?php endif ?>
                 </ul>
 			</div>
