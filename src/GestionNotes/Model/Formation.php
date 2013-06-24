@@ -71,4 +71,31 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
         
         return $data = $sth->fetch(PDO::FETCH_ASSOC);
     }
+    
+    public static function fetchTreeByUserId($id)
+    {
+        $sth = self::$db->prepare('
+            SELECT
+                tp.formation_id AS tp_id, tp.formation_id AS tp_title,
+                td.formation_id AS td_id, td.formation_title AS td_title,
+                s.node_id AS semestre_id, s.node_title AS semestre_title,
+                f.node_id AS formation_id, f.node_title AS formation_title,
+                d.node_id AS departement_id, d.node_title AS departement_title
+            FROM formations AS tp
+            RIGHT JOIN formations AS td ON tp.parent_formation_id = td.formation_id
+            RIGHT JOIN nodes AS s ON td.parent_node_id = s.node_id
+            RIGHT JOIN nodes AS f ON s.parent_node_id = f.node_id
+            RIGHT JOIN nodes AS d ON f.parent_node_id = d.node_id
+            WHERE tp.formation_id = (
+                SELECT u.formation_id
+                FROM users AS u
+                WHERE u.user_id = :user_id
+            )
+        ');
+        
+        $sth->bindParam(':user_id', intval($id), PDO::PARAM_INT);
+        $sth->execute();
+        
+        return $data = $sth->fetch(PDO::FETCH_ASSOC);
+    }
 }
