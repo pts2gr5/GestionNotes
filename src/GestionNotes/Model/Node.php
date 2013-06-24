@@ -11,6 +11,7 @@
  */
 class GestionNotes_Model_Node extends GestionNotes_Model
 {
+    const TYPE_DEPARTEMENT  = 0;
     const TYPE_FORMATION    = 1;
     const TYPE_SEMESTRE     = 2;
     const TYPE_UE           = 3;
