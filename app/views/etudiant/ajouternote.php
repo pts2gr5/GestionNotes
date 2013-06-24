@@ -2,6 +2,7 @@
 <form name="ajouternote" method="post" action="<?php echo $this->url('etudiant/ajouternote') ?>">
 	<label for="matiere">Matière :</label>
    <select name="matiere" onchange="ajouternote.submit()">
+       <option value="0" select />
         <?php foreach ( $nodes as $node ): ?>
         <?php $selected = (isset($_REQUEST['matiere']) && intval($_REQUEST['matiere']) == $node['id']) ? 'selected' : ''; ?>
         <option value="<?php echo $node['id'] ?>" <?php echo $selected ?>><?php echo $node['title']; ?></option>
@@ -11,7 +12,7 @@
    
    <!-- Si on a cliqué sur une matière, on affiche les épreuves -->
    <?php if ( isset($_REQUEST['matiere']) ): ?>
-   		<?php  if ( is_array($epreuves) && count($epreuves) > 0 ): ?>
+   		<?php  if ( isset($epreuves) && is_array($epreuves) && count($epreuves) > 0 ): ?>
 			<label for="epreuve">Epreuve :</label>
             <select name="epreuve" onchange="form.submit()">
 		        <?php foreach ( $epreuves as $ep ): ?>
@@ -19,15 +20,15 @@
 		        <?php endforeach; ?>
 		   	</select>
             <br /><br />
+            
+            <!-- Si on a cliqué sur une épreuve, on affiche les un champs de texte -->
+    		<?php if ( isset($_REQUEST['epreuve']) ): ?>
+                Note: <input type="text" name="note"/>
+                <br /><br />
+    	    <?php endif;?>
         <?php else:  ?>
             Aucune épreuve définie pour cette matière.<br />
         <?php endif ?>
-		
-        <!-- Si on a cliqué sur une épreuve, on affiche les un champs de texte -->
-		<?php if ( isset($_REQUEST['epreuve']) ): ?>
-            Note: <input type="text" name="note"/>
-            <br /><br />
-	    <?php endif;?>
 	<?php endif;  ?>
     
     <input type="submit" value="Ajouter" />

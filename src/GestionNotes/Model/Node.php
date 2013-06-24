@@ -148,7 +148,7 @@ class GestionNotes_Model_Node extends GestionNotes_Model
      * @param integer $nodeId
      * @return object
      */
-	public static function listeEpreuvesByMatiereID ($node_id)
+	public static function listeEpreuvesByMatiereID($node_id)
     {
         $sth = self::$db->prepare('
            SELECT n.note_id AS id, n.title AS title, n.coefficient as coefficient
@@ -159,6 +159,21 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         $sth->bindParam(':node_id', $node_id, PDO::PARAM_INT );
         $sth->execute();
        
+        $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+                $result[] = self::exchange($data);
+        return $result;
+    }
+    
+    public static function listeEpreuvesByEtudiantID($etudiantId)
+    {
+        $sth = self::$db->prepare('
+            
+        ');
+        
+        $sth->bindParam(':etudiant_id', $etudiantId, PDO::PARAM_INT);
+        $sth->execute();
+        
         $result = array();
         while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
                 $result[] = self::exchange($data);
