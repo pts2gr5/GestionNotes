@@ -112,7 +112,6 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	 */
 	public function gererstudentsAction()
 	{
-		
 		$this->params['list_title'] = 'Gérer les étudiants';
 		//on récupère tous les paramètres
 		if (isset($_REQUEST['choixFormation']))

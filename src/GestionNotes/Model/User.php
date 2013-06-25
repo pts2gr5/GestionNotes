@@ -182,7 +182,9 @@ class GestionNotes_Model_User extends GestionNotes_Model
     public static function recupererAllUser()
     {
     	$sth = self::$db->prepare('
-            SELECT apogee_code,last_name,first_name, formation_id
+            SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
+                u.last_name AS lastName, u.apogee_code AS apogee, u.type,
+                u.formation_id AS formation
             FROM `users` AS u
             WHERE `type` = '.self::TYPE_ETUDIANT.'
         ');
