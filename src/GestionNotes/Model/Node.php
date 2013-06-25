@@ -83,7 +83,6 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         while ( $data = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $data['parent'] = ! $data['parent_id'] ? null :
                 self::exchange(array('title'=>$data['parent_title'],'id'=>$data['parent_id']));
-            unset($data['parent_id']); unset($data['parent_title']);
             $nodes[] = self::exchange($data);
         }
         return $nodes;

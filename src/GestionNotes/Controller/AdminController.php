@@ -95,8 +95,42 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	public function groupesAction()
 	{
 		$this->params['list_title'] = 'Gestion des groupes';
+        $this->params['semestres'] = GestionNotes_Model_Node::fetchByNodeType(GestionNotes_Model_Node::TYPE_SEMESTRE);
+        $this->params['td'] = GestionNotes_Model_Formation::fetchAllTD();
+        $this->params['tp'] = GestionNotes_Model_Formation::fetchAllTP();
 		return $this->renderPage('admin/groupes');
 	}
+    
+    public function editgroupAction()
+    {
+        $id = filter_var($_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        $this->params['formation'] = GestionNotes_Model_Formation::fetchOneByFormationId($id);
+        return $this->renderPage('admin/editgroup');
+    }
+    
+    public function savegroupAction()
+    {
+        $id     = filter_var($_REQUEST['formation_id'], FILTER_SANITIZE_NUMBER_INT);
+        $title  = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+        GestionNotes_Model_Formation::updateFormation($id, $title);
+        return $this->redirect($this->url('admin/groupes'));
+    }
+    
+    public function addgroupAction()
+    {
+        $title  = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+        $parent = filter_var($_POST['parent'], FILTER_SANITIZE_NUMBER_INT);
+        $type   = filter_var($_POST['type'], FILTER_SANITIZE_NUMBER_INT);
+        GestionNotes_Model_Formation::addFormation($title, $type, $parent);
+        return $this->redirect($this->url('admin/groupes'));
+    }
+    
+    public function delgroupAction()
+    {
+        $id = filter_var($_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        GestionNotes_Model_Formation::delFormation($id);
+        return $this->redirect($this->url('admin/groupes'));
+    }
 	
 	/**
 	 * Page Gérer les étudiants accueil

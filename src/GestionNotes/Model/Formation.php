@@ -98,4 +98,98 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
         
         return $data = $sth->fetch(PDO::FETCH_ASSOC);
     }
+    
+    public static function fetchAllTD()
+    {
+        $sth = self::$db->prepare('
+            SELECT
+                td.formation_id AS id, td.formation_title AS title,
+                s.node_id AS semestre_id, s.node_title AS semestre_title,
+                f.node_id AS formation_id, f.node_title AS formation_title,
+                d.node_id AS departement_id, d.node_title AS departement_title
+            FROM formations AS td
+            RIGHT JOIN nodes AS s ON td.parent_node_id = s.node_id
+            RIGHT JOIN nodes AS f ON s.parent_node_id = f.node_id
+            RIGHT JOIN nodes AS d ON f.parent_node_id = d.node_id
+            WHERE td.formation_type = '.self::TYPE_TD.'
+            GROUP BY td.formation_id
+            ORDER BY d.node_id, f.node_id, s.node_id, td.formation_id, td.formation_id
+        ');
+        
+        $sth->execute();
+        
+        $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+            $result[] = $data;
+        return $result;
+    }
+    
+    public static function fetchAllTP()
+    {
+        $sth = self::$db->prepare('
+            SELECT
+                tp.formation_id AS id, tp.formation_title AS title, tp.formation_type AS type,
+                td.formation_id AS td_id, td.formation_title AS td_title,
+                s.node_id AS semestre_id, s.node_title AS semestre_title,
+                f.node_id AS formation_id, f.node_title AS formation_title,
+                d.node_id AS departement_id, d.node_title AS departement_title
+            FROM formations AS tp
+            RIGHT JOIN formations AS td ON tp.parent_formation_id = td.formation_id
+            RIGHT JOIN nodes AS s ON td.parent_node_id = s.node_id
+            RIGHT JOIN nodes AS f ON s.parent_node_id = f.node_id
+            RIGHT JOIN nodes AS d ON f.parent_node_id = d.node_id
+            WHERE tp.formation_type = '.self::TYPE_TP.'
+            GROUP BY tp.formation_id
+            ORDER BY d.node_id, f.node_id, s.node_id, td.formation_id, tp.formation_id
+        ');
+        
+        $sth->execute();
+        
+        $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+            $result[] = $data;
+        return $result;
+    }
+    
+    public static function addFormation($title, $type, $parent)
+    {
+        $sth = self::$db->prepare('
+            INSERT INTO formations (formation_title, formation_type, parent_formation_id, parent_node_id)
+            VALUES (:title, :type, :parent, :node)
+        ');
+        
+        $null = null;
+        $sth->bindParam(':title',   $title, PDO::PARAM_STR);
+        $sth->bindParam(':type',    $type, PDO::PARAM_INT);
+        if ( $type == self::TYPE_TP ) {
+            $sth->bindParam(':parent', $parent, PDO::PARAM_INT);
+            $sth->bindParam(':node', $null);
+        } else {
+            $sth->bindParam(':node', $parent, PDO::PARAM_INT );
+            $sth->bindParam(':parent', $null);
+        }
+        
+        return $sth->execute();
+    }
+    
+    public static function delFormation($id)
+    {
+        $sth = self::$db->prepare('
+            DELETE FROM formations WHERE formation_id = :id
+        ');
+        
+        $sth->bindParam(':id', $id, PDO::PARAM_INT);
+        return $sth->execute();
+    }
+    
+    public static function updateFormation($id, $title)
+    {
+        $sth = self::$db->prepare('
+            UPDATE formations SET formation_title = :title WHERE formation_id = :id
+        ');
+        
+        $sth->bindParam(':id', $id, PDO::PARAM_INT);
+        $sth->bindParam(':title', $title, PDO::PARAM_STR);
+        return $sth->execute();
+    }
 }
