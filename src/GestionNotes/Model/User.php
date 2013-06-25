@@ -175,6 +175,26 @@ class GestionNotes_Model_User extends GestionNotes_Model
             return false;
     }
     
+    /**
+     * Récupère tous les users de la base
+     *
+     */
+    public static function recupererAllUser()
+    {
+    	$sth = self::$db->prepare('
+            SELECT apogee_code,last_name,first_name, formation_id
+            FROM `users` AS u
+            WHERE `type` = '.self::TYPE_ETUDIANT.'
+        ');
+        
+    	$sth->execute();
+    
+    	$result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+                $result[] = self::exchange($data);
+        return $result;
+    }
+    
     // ------------------------- OPERATIONS DE MODIFICATION ------------------------- //
     
     /**
@@ -183,7 +203,7 @@ class GestionNotes_Model_User extends GestionNotes_Model
      * @param string $password
      * @return boolean
      */
-    public function changePassword($password)
+    public static function changePassword($password)
     {
         $sth = self::$db->prepare('
             UPDATE users AS u
@@ -198,6 +218,17 @@ class GestionNotes_Model_User extends GestionNotes_Model
         
         return $sth->execute();
     } 
+    
+    /**
+     * Ajoute un user
+     *
+     * @param string $password
+     * @return boolean
+     */
+    public static function addUser($name,$prenom,$apogee,$semestre,$groupeTD,$groupeTP)
+    {
+    	//TODO
+    }
     
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
 }

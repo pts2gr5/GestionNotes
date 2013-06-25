@@ -45,7 +45,7 @@ class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 			//Si on a cliqué sur une épreuve
 			if ( isset($_REQUEST['epreuve']) && $_REQUEST['epreuve'] ) {
 				//on teste si l'utilisateur a déjà entré une note pour cette épreuve-ci
-				if ( isset($_REQUEST['note']) ) {
+				if ( isset($_REQUEST['note']) && $_REQUEST['note'] ) {
                     $note = filter_var($_REQUEST['note'], FILTER_SANITIZE_NUMBER_FLOAT);
                     GestionNotes_Model_Node::ajouterNote($this->visitor['id'], $matiere, $note);
 					return $this->redirect($this->url('etudiant/moyennes'));

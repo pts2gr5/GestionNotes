@@ -36,6 +36,9 @@
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('') ?>">Accueil</a></li>
                     <?php if ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ADMIN ): ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/students') ?>">Gérer les étudiants</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/gererstudents') ?>">Gérer</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/ajouterstudents') ?>">Ajouter</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/groupes') ?>">Groupes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/formations') ?>">Gérer les formations</a></li>
                     <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_DIRETUDE ):  ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/moyennes') ?>">Consulter les moyennes</a></li>
