@@ -284,13 +284,21 @@ class GestionNotes_Model_Node extends GestionNotes_Model
     }
     
     public static function ajouterNote($userId,$epreuveId, $note){
+        // Récupère la node
+        $sth = self::$db->prepare('SELECT n.note_id FROM notes AS n WHERE n.node_id = :node_id LIMIT 1');
+        $sth->bindParam(':node_id', $epreuveId, PDO::PARAM_INT);
+        $sth->execute();
+        $parent = $sth->fetch(PDO::FETCH_ASSOC);
+        
+        // Effectue l'insertion
     	$sth = self::$db->prepare('
-            INSERT IGNORE INTO `student_notes`(`user_id`, `note_id`, `student_note`) VALUES (:user_id,:node_id,:note)
+            INSERT IGNORE INTO `student_notes`(`user_id`, `note_id`, `student_note`) VALUES (:user_id,:note_id,:note)
         ');
     	
     	$sth->bindParam(':user_id', $userId, PDO::PARAM_INT );
-    	$sth->bindParam(':node_id', $epreuveId, PDO::PARAM_INT );
+    	$sth->bindParam(':note_id', $parent['note_id'], PDO::PARAM_INT );
     	$sth->bindParam(':note', $note, PDO::PARAM_INT );
+        
     	return $sth->execute();
     }
     

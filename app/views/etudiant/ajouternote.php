@@ -29,7 +29,7 @@
 			<?php  if ( isset($epreuves) && is_array($epreuves) && count($epreuves) > 0 ): ?>
 			<td><label for="epreuve">Epreuve :</label></td>
 			<td>
-                <select name="epreuve" onchange="form.submit()">
+                <select name="epreuve" onchange="ajouternote.submit()">
                     <?php foreach ( $epreuves as $ep ): ?>
 					<option value="<?php echo $ep['id'] ?>"><?php echo $ep['title']; ?></option>
 					<?php endforeach; ?>
@@ -52,7 +52,7 @@
 			<?php endif ?>
 		</tr>
         <tr>
-            <td colspan="2"><input type="submit" value="Ajouter" style="display: none;" /></td>
+            <td colspan="2"><input type="submit" value="Ajouter" /></td>
         </tr>
 		<?php else: ?>
 		<tr>
