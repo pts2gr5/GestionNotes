@@ -60,6 +60,67 @@ class GestionNotes_Model_Node extends GestionNotes_Model
     // ------------------------- OPERATIONS DE LECTURE ------------------------- //
     
     /**
+     * Récupère le titre du parent de l'id en paramètre
+     *
+     * @param integer $nodeId
+     * @return object
+     */
+    public static function titreParent($nodeId)
+    {
+    	$sth = self::$db->prepare('
+           SELECT `node_title` FROM `nodes` 
+    			WHERE `node_id` = :nodeId 
+    			LIMIT 0 , 1
+        ');
+    
+    	$sth->bindParam(':nodeId', $nodeId, PDO::PARAM_INT);
+    	$sth->execute();
+    
+    	
+    	 $data = $sth->fetch(PDO::FETCH_ASSOC);
+    	
+    	
+    	return $data['node_title'];
+    }
+    
+    public static function idParent($nodeId)
+    {
+    	$sth = self::$db->prepare('
+           SELECT `node_id` FROM `nodes`
+    			WHERE `node_id` = :nodeId
+    			LIMIT 0 , 1
+        ');
+    
+    	$sth->bindParam(':nodeId', $nodeId, PDO::PARAM_INT);
+    	$sth->execute();
+    
+    	 
+    	$data = $sth->fetch(PDO::FETCH_ASSOC);
+    	 
+    	 
+    	return $data['node_id'];
+    }
+    
+    public static function typeById($nodeId)
+    {
+    	$sth = self::$db->prepare('
+           SELECT `node_type` FROM `nodes`
+    			WHERE `node_id` = :nodeId
+    			LIMIT 0 , 1
+        ');
+    
+    	$sth->bindParam(':nodeId', $nodeId, PDO::PARAM_INT);
+    	$sth->execute();
+    
+    
+    	$data = $sth->fetch(PDO::FETCH_ASSOC);
+    
+    
+    	return $data['node_type'];
+    }
+    
+    
+    /**
      * Récupère des notes d'un certain type
      *
      * @param integer $nodeId
@@ -103,6 +164,7 @@ class GestionNotes_Model_Node extends GestionNotes_Model
             FROM nodes AS n
             LEFT JOIN nodes AS p ON n.parent_node_id = p.node_id
             WHERE n.parent_node_id = :parent_node_id
+        	ORDER BY title ASC
         ');
         
         $sth->bindParam(':parent_node_id', $parentNodeId, PDO::PARAM_INT );
@@ -159,8 +221,11 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         $sth->execute();
        
         $result = array();
-        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
-                $result[] = self::exchange($data);
+        
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) ){
+        	 $result[] = $data;
+        }
+        
         return $result;
     }
     
@@ -229,5 +294,36 @@ class GestionNotes_Model_Node extends GestionNotes_Model
     	return $sth->execute();
     }
     
+    public static function modifierNode($nodeId, $title, $type,$parent_node_id, $coefficient ){
+    	$sth = self::$db->prepare('
+    			UPDATE `nodes`
+    			SET 
+    			`node_title` = :title,
+    			`node_type` = :type,
+				 `parent_node_id` = :parent_node_id,
+ 				`coefficient` = :coefficient
+    			WHERE `node_id` = :nodeId ;
+        ');
+    	 
+    	$sth->bindParam(':title', $title, PDO::PARAM_STR );
+    	$sth->bindParam(':nodeId', $nodeId, PDO::PARAM_INT );
+    	$sth->bindParam(':type', $type, PDO::PARAM_INT );
+    	$sth->bindParam(':parent_node_id', $parent_node_id, PDO::PARAM_INT );
+    	$sth->bindParam(':coefficient', $coefficient, PDO::PARAM_INT );
+    	
+    	return $sth->execute();
+    }
+    
+    
+    
     // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
+    public static function supprimerNode($nodeId){
+    	$sth = self::$db->prepare('
+    			DELETE FROM `nodes` WHERE `node_id` = :nodeID
+        ');
+    
+    	$sth->bindParam(':nodeID', $nodeId, PDO::PARAM_INT );
+    	return $sth->execute();
+    }
+    
 }

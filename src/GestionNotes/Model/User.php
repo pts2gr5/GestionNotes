@@ -197,6 +197,48 @@ class GestionNotes_Model_User extends GestionNotes_Model
         return $result;
     }
     
+    /**
+     * Récupère tous les users de la base
+     *
+     */
+    public static function recupererByCodeApogee($codeApogee)
+    {
+    	$sth = self::$db->prepare('
+           SELECT * FROM `users` WHERE `apogee_code` = :codeApogee
+            LIMIT 0,1
+        ');
+        
+        $sth->bindParam(':codeApogee', $codeApogee, PDO::PARAM_INT);
+        $sth->execute();
+        
+       
+    	$result = array();
+        $data = $sth->fetch(PDO::FETCH_ASSOC) ; //retourne un tableau associatif des colonnes-valeurs
+        return $data; //false si pas de résultat
+    }
+     public static function recupererByNomPrenom($nom,$prenom) {
+     	
+     	$sth = self::$db->prepare('
+           SELECT * FROM `users` WHERE `last_name` = :nom OR `first_name` = :prenom
+            LIMIT 0,1
+        ');
+        
+        $sth->bindParam(':nom', $nom, PDO::PARAM_INT);
+        $sth->bindParam(':prenom', $prenom, PDO::PARAM_INT);
+        $sth->execute();
+        
+       
+    	$result = array();
+        $data = $sth->fetch(PDO::FETCH_ASSOC) ; //retourne un tableau associatif des colonnes-valeurs
+        return $data; //false si pas de résultat
+     }
+    
+    
+    
+    
+    
+    
+    
     // ------------------------- OPERATIONS DE MODIFICATION ------------------------- //
     
     /**
@@ -227,10 +269,61 @@ class GestionNotes_Model_User extends GestionNotes_Model
      * @param string $password
      * @return boolean
      */
-    public static function addUser($name,$prenom,$apogee,$semestre,$groupeTD,$groupeTP)
+    public static function addUserAdmin($username,$name,$prenom)
+    {
+    	
+    	$sth = self::$db->prepare('
+            INSERT INTO `users` (`username`,`last_name`,`first_name`,`password`,`type`,`password_salt`) VALUES 
+    			(:username,:name,:prenom,"ebf796a9310b6e886f26bfc6eb4874b2",1,"5172b9f2b0287")
+        ');
+        
+        
+        $sth->bindParam(':username', $username, PDO::PARAM_STR);
+     	$sth->bindParam(':name', $name, PDO::PARAM_STR);
+      	$sth->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+        
+        return $sth->execute();
+    }
+    
+    public static function addUserDD($username,$name,$prenom)
+    {
+    	
+    	$sth = self::$db->prepare('
+            INSERT INTO `users` (`username`,`last_name`,`first_name`,`password`,`type`,`password_salt`) VALUES
+    			(:username,:name,:prenom,"ebf796a9310b6e886f26bfc6eb4874b2",2,"5172b9f2b0287")
+        ');
+    
+    
+    	$sth->bindParam(':username', $username, PDO::PARAM_STR);
+    	$sth->bindParam(':name', $name, PDO::PARAM_STR);
+    	$sth->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+    
+    	return $sth->execute();
+    }
+    
+    public static function addUserEtudiant($username,$name,$prenom, $apogee,$idFormation)
+    {
+    	//$formationID est normalement un id d'un TP
+    	$sth = self::$db->prepare('
+            INSERT INTO `users` (`username`,`last_name`,`first_name`,`password`,`type`,`apogee_code`,`formation_id`,`password_salt`) VALUES
+    			(:username,:name,:prenom,"ebf796a9310b6e886f26bfc6eb4874b2",3,:apogee, :idFormation,"5172b9f2b0287")
+        ');
+    
+    
+    	$sth->bindParam(':username', $username, PDO::PARAM_STR);
+    	$sth->bindParam(':name', $name, PDO::PARAM_STR);
+    	$sth->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+    	$sth->bindParam(':apogee', $apogee, PDO::PARAM_STR);
+    	$sth->bindParam(':idFormation', $idFormation, PDO::PARAM_INT);
+    
+    	return $sth->execute();
+    }
+    
+    // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
+    
+    public static function deleteUser($id)
     {
     	//TODO
     }
     
-    // ------------------------- OPERATIONS DE SUPPRESSION ------------------------- //
 }

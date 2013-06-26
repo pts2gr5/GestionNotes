@@ -11,6 +11,18 @@
  */ 
 class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 {
+	/**
+	 * Accueil
+	 */
+	public function accueilAction()
+	{
+		$this->params['list_title'] = 'Accueil';
+	
+		return $this->renderPage('etudiant/accueil');
+	}
+	
+	
+	
 	public function moyennesAction()
 	{
 		$this->params['list_title'] = 'Mes résultats';
@@ -32,7 +44,7 @@ class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 	public function ajouternoteAction()
 	{
 		$this->params['list_title'] = 'Ajouter une note';
-		$nodes = GestionNotes_Model_Node::fetchByNodeType(GestionNotes_Model_Node::TYPE_MATIERE);
+		$nodes = GestionNotes_Model_Node::fetchByNodeType(6);
 		$this->params['nodes'] = & $nodes;
         
 		//Si on a cliqué sur une matière
@@ -45,7 +57,7 @@ class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 			//Si on a cliqué sur une épreuve
 			if ( isset($_REQUEST['epreuve']) && $_REQUEST['epreuve'] ) {
 				//on teste si l'utilisateur a déjà entré une note pour cette épreuve-ci
-				if ( isset($_REQUEST['note']) && $_REQUEST['note'] ) {
+				if ( isset($_REQUEST['note']) ) {
                     $note = filter_var($_REQUEST['note'], FILTER_SANITIZE_NUMBER_FLOAT);
                     GestionNotes_Model_Node::ajouterNote($this->visitor['id'], $matiere, $note);
 					return $this->redirect($this->url('etudiant/moyennes'));

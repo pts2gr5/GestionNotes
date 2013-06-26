@@ -161,15 +161,82 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
         $null = null;
         $sth->bindParam(':title',   $title, PDO::PARAM_STR);
         $sth->bindParam(':type',    $type, PDO::PARAM_INT);
+        
+        
+        //nb est l'id du semestre parent au TD
+        //id du TD est la variable $parent
         if ( $type == self::TYPE_TP ) {
+        	$nb = GestionNotes_Model_Formation::idTdToIdSemestre($parent);
             $sth->bindParam(':parent', $parent, PDO::PARAM_INT);
-            $sth->bindParam(':node', $null);
+            $sth->bindParam(':node', $nb);
         } else {
+        	$null = null;
             $sth->bindParam(':node', $parent, PDO::PARAM_INT );
             $sth->bindParam(':parent', $null);
         }
         
         return $sth->execute();
+    }
+    
+    
+    public static function idTdToIdSemestre($idTd)
+    {
+    	$sth = self::$db->prepare('
+            SELECT `parent_node_id` FROM `formations` 
+    			WHERE `formation_id` = :idTd
+        ');
+    
+    	
+    	$sth->bindParam(':idTd',$idTd, PDO::PARAM_INT);
+    	
+    
+    	$sth->execute();
+    	
+    	
+    	$data = $sth->fetch(PDO::FETCH_ASSOC);
+    	return $data['parent_node_id'];
+    }
+    
+    public static function idTpToIdTd($idTp)
+    {
+    	$sth = self::$db->prepare('
+    			SELECT `formation_title` FROM `formations`
+    			WHERE `formation_id`
+    			in (
+    			Select `parent_formation_id`
+    			from formations
+    			where `formation_id`= :idTp
+    			)
+        ');
+    
+    	 
+    	$sth->bindParam(':idTp',$idTp, PDO::PARAM_INT);
+    	 
+    
+    	$sth->execute();
+    	 
+    	 
+    	$data = $sth->fetch(PDO::FETCH_ASSOC);
+    	return $data['formation_title'];
+    }
+    
+    public static function tpIdToTitle($idTp)
+    {
+    	$sth = self::$db->prepare('
+    			SELECT `formation_title` FROM `formations`
+    			where `formation_id`= :idTp
+    			
+        ');
+    
+    
+    	$sth->bindParam(':idTp',$idTp, PDO::PARAM_INT);
+    
+    
+    	$sth->execute();
+    
+    
+    	$data = $sth->fetch(PDO::FETCH_ASSOC);
+    	return $data['formation_title'];
     }
     
     public static function delFormation($id)
@@ -191,5 +258,22 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
         $sth->bindParam(':id', $id, PDO::PARAM_INT);
         $sth->bindParam(':title', $title, PDO::PARAM_STR);
         return $sth->execute();
+    }
+    
+    
+    public static function fetchtpBySemestreId($idSemestre)
+    {
+    	$sth = self::$db->prepare('
+            SELECT distinct (formation_id), formation_title FROM `formations` as f, nodes as n WHERE f.formation_type = 2 AND f.parent_node_id = :idSemestre
+        ');
+    
+    	$sth->bindParam(':idSemestre', $idSemestre, PDO::PARAM_INT);
+    	$sth->execute();
+       
+       $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+                $result[] = self::exchange($data);
+        return $result;
+    	
     }
 }

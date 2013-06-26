@@ -48,11 +48,11 @@
 	 <?php endif;?>
 	    <tr>
 	    	<td>Nom :</td>
-	    	<td><input name="nomInscrit" class="INPUT_text" type="text" <?php if (!empty($_REQUEST['nomInscrit'])){echo 'value="',$_REQUEST['nomInscrit'],'"';} ?>/></td>
+	    	<td><input name="nomInscrit" class="INPUT_text" type="text" value="<?php echo htmlspecialchars(@ $_REQUEST['nomInscrit']) ?>" /></td>
 	    </tr>
 	    <tr>
 	    	<td>Prénom :</td>
-	    	<td><input name="prenomInscrit"  class="INPUT_text" type="text" value="<?php echo htmlspecialchars(@ $_REQUEST['prenomInscrit']) ?>/></td>
+	    	<td><input name="prenomInscrit"  class="INPUT_text" type="text" value="<?php echo htmlspecialchars(@ $_REQUEST['prenomInscrit']) ?>" /></td>
 	    </tr>
 	    <tr>
 	    	<td>Type :</td>
@@ -67,7 +67,7 @@
 	    <?php if ($type == 3):?>
 			    <tr>
 			    	<td>Code Apogée :</td>
-			    	<td><input name="codeApogeeInscrit" class="INPUT_text" type="text" size="8" value="<?php echo htmlspecialchars(@ $_REQUEST['codeApogeeInscrit']) ?>/>/></td>
+			    	<td><input name="codeApogeeInscrit" class="INPUT_text" type="text" size="8" value="<?php echo htmlspecialchars(@ $_REQUEST['codeApogeeInscrit']) ?>" /></td>
 			    </tr>
 			     <tr>
 			    	<td>Formation :</td>
