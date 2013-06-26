@@ -110,7 +110,7 @@
 			    <tr>
 			    	<td>TP :</td>
 			    	<td><select name="TpInscrit" name="boite2" onchange="ajouterUser.submit()">
-			    	<option selected></option>
+			    	<option <?php echo !isset($_REQUEST['TpInscrit']) ? 'selected':'' ?>></option>
 			    	<?php if ( is_array($tps) && count($tps) > 0 ): ?>
 								<?php foreach ( $tps as $tp ): ?>
 									<?php $selected = (isset($_REQUEST['TpInscrit']) && intval($_REQUEST['TpInscrit']) == $tp['id']) ? 'selected' : ''; ?>

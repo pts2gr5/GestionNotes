@@ -264,13 +264,17 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
     public static function fetchtpBySemestreId($idSemestre)
     {
     	$sth = self::$db->prepare('
-            SELECT distinct (formation_id), formation_title FROM `formations` as f, nodes as n WHERE f.formation_type = 2 AND f.parent_node_id = :idSemestre
+            SELECT formation_id AS id, formation_title AS title
+            FROM `formations` as f
+            WHERE f.formation_type = '.self::TYPE_TP.' AND f.parent_node_id = :idSemestre
+            GROUP BY formation_id
+            ORDER BY parent_node_id, parent_formation_id
         ');
     
     	$sth->bindParam(':idSemestre', $idSemestre, PDO::PARAM_INT);
     	$sth->execute();
        
-       $result = array();
+        $result = array();
         while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
                 $result[] = self::exchange($data);
         return $result;
