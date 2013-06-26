@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 24 Juin 2013 à 20:51
+-- Généré le: Mer 26 Juin 2013 à 12:00
 -- Version du serveur: 5.5.29
 -- Version de PHP: 5.2.17
 
@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `formations`
 --
 
+DROP TABLE IF EXISTS `formations`;
 CREATE TABLE IF NOT EXISTS `formations` (
   `formation_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `formation_title` varchar(35) NOT NULL,
@@ -44,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `formations` (
 -- Structure de la table `nodes`
 --
 
+DROP TABLE IF EXISTS `nodes`;
 CREATE TABLE IF NOT EXISTS `nodes` (
   `node_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `node_title` varchar(35) NOT NULL,
@@ -60,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
 -- Structure de la table `notes`
 --
 
+DROP TABLE IF EXISTS `notes`;
 CREATE TABLE IF NOT EXISTS `notes` (
   `note_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `node_id` int(10) unsigned NOT NULL,
@@ -76,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `notes` (
 -- Structure de la table `student_notes`
 --
 
+DROP TABLE IF EXISTS `student_notes`;
 CREATE TABLE IF NOT EXISTS `student_notes` (
   `student_note_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
@@ -83,9 +87,10 @@ CREATE TABLE IF NOT EXISTS `student_notes` (
   `student_note` float unsigned NOT NULL,
   PRIMARY KEY (`student_note_id`),
   UNIQUE KEY `note_idx` (`user_id`,`note_id`),
+  UNIQUE KEY `user_id` (`user_id`,`note_id`),
   KEY `node_id_idx` (`note_id`),
   KEY `user_id_idx` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -93,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `student_notes` (
 -- Structure de la table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
