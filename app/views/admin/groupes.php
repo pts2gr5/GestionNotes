@@ -53,7 +53,7 @@
             <div>
                 <label for="title">Titre:</label><br />
                 <input name="title" class="INPUT_text" type="text" size="35" value="" />
-                <input type="submit" value="Ajouter" />
+                <input type="submit" class="INPUT_submit" value="Ajouter" />
             </div>
             </form>
         </div>
@@ -104,14 +104,14 @@
                 <select name="parent">
                     <?php foreach ($tp AS $group): ?>
                     <option value="<?php echo $group['id'] ?>">
-                        <?php printf('%s > %s > %s > %s', $group['departement_title'], $group['formation_title'], $group['semestre_title'], $group['title']) ?></option>
+                        <?php printf('%s > %s > %s', /*$group['departement_title'],*/ $group['formation_title'], $group['semestre_title'], $group['title']) ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
             <div>
                 <label for="title">Titre:</label><br />
                 <input name="title" class="INPUT_text" type="text" size="35" value="" />
-                <input type="submit" value="Ajouter" />
+                <input type="submit" class="INPUT_submit" value="Ajouter" />
             </div>
             </form>
         </div>
