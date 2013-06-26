@@ -91,12 +91,62 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
                 FROM users AS u
                 WHERE u.user_id = :user_id
             )
+            ORDER BY d.node_id, f.node_id, s.node_id, td.formation_id, tp.formation_id
         ');
         
         $sth->bindParam(':user_id', intval($id), PDO::PARAM_INT);
         $sth->execute();
         
         return $data = $sth->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public static function fetchAllByFormationid($id)
+    {
+        $sth = self::$db->prepare('
+            SELECT n.node_id AS id, n.node_type AS type, n.node_title AS title, n.parent_node_id AS parent, t.note_id
+            FROM nodes AS n
+            LEFT JOIN notes AS t ON n.node_id = t.node_id
+            WHERE FIND_IN_SET(n.parent_node_id, (
+                SELECT CONCAT_WS(\',\',
+                    GROUP_CONCAT(DISTINCT d.node_id), GROUP_CONCAT(DISTINCT f.node_id), GROUP_CONCAT(DISTINCT s.node_id),
+                    GROUP_CONCAT(DISTINCT m.node_id), GROUP_CONCAT(DISTINCT e.node_id), GROUP_CONCAT(DISTINCT u.node_id),
+                    GROUP_CONCAT(DISTINCT m2.node_id), GROUP_CONCAT(DISTINCT td.parent_node_id), GROUP_CONCAT(tp.parent_node_id)
+                ) AS nodes
+                FROM formations AS tp
+                LEFT JOIN formations AS td ON tp.parent_formation_id = td.formation_id
+                LEFT JOIN nodes AS s ON td.parent_node_id = s.node_id   -- TYPE_SEMESTRE
+                LEFT JOIN nodes AS f ON s.parent_node_id = f.node_id    -- TYPE_FORMATION
+                LEFT JOIN nodes AS d ON f.parent_node_id = d.node_id    -- TYPE_DEPARTEMENT
+                LEFT JOIN nodes AS m ON m.parent_node_id = s.node_id    -- TYPE_MODULE
+                LEFT JOIN nodes AS m2 ON m2.parent_node_id = m .node_id -- TYPE_MATIERE
+                LEFT JOIN nodes AS e ON e.parent_node_id = m.node_id    -- TYPE_EPREUVE
+                LEFT JOIN nodes AS u ON u.parent_node_id = s.node_id    -- TYPE_UE
+                WHERE tp.formation_id = :formation_id
+                ORDER BY d.node_id, f.node_id, s.node_id, td.formation_id, tp.formation_id
+            ))
+        ');
+        
+        $sth->bindParam(':formation_id', intval($id), PDO::PARAM_INT);
+        $sth->execute();
+        
+        $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        foreach ( $data as $node )
+            if ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION ) { $parent = $node['parent']; break; }
+        return self::toTree($data, $parent);
+    }
+    
+    protected static function toTree(array &$elements, $parentId = 0)
+    {
+        $branch = array();
+       	foreach ($elements as $element) {
+        	if ($element['parent'] == $parentId) {
+            	$children = self::toTree($elements, $element['id']);
+               	$element['children'] = is_array($children) ? $children : array();
+               	$branch[$element['id']] = $element;
+               	unset($elements[$element['id']]);
+           	}
+       	}
+        return $branch;
     }
     
     public static function fetchAllTD()

@@ -17,15 +17,14 @@ class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 	public function accueilAction()
 	{
 		$this->params['list_title'] = 'Accueil';
-	
 		return $this->renderPage('etudiant/accueil');
 	}
-	
-	
-	
+    
 	public function moyennesAction()
 	{
 		$this->params['list_title'] = 'Mes résultats';
+        $this->params['nodes'] = GestionNotes_Model_Formation::fetchAllByFormationid($this->visitor['formation']);
+        $this->params['notes'] = GestionNotes_Model_Note::fetchAllByUserId($this->visitor['id']);
         return $this->renderPage('etudiant/moyennes');
 	}
     
