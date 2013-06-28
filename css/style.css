@@ -1,4 +1,4 @@
-/********************************* Style GÈnÈrale ************************************/
+/********************************* Style g√©n√©ral ************************************/
 
 p {
 	clear:both;
@@ -73,7 +73,7 @@ margin-bottom:10px;
 	float:left;
 }
 
-/********************************* Fin Style GÈnÈrale ************************************/
+/********************************* Fin Style G√©n√©rale ************************************/
 
 /********* Pour les Formulaire ***************/
 
@@ -85,6 +85,13 @@ padding: 4px 8px;
 outline: 0;
 -webkit-appearance: none;
 max-width:120px;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 255, 1);
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, 1); 
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 255, 1); 
 }
 
 .INPUT_text {
@@ -247,6 +254,12 @@ border: 2px solid #E0E0E0;
     border-collapse: collapse;
 }
 
+.login-box tr.errors ul {
+    text-align: center;
+    color: #FF0000;
+    font-weight: lighter; }
+.login-box tr.errors li { display: inline; }
+
 /*********************** PAGE D'ACCUEIL *****************************************/
 
 
@@ -305,3 +318,7 @@ border: 2px solid #E0E0E0;
 	background-color:#E7E7E7;
 }
 
+.accueil_boxColor_violet {
+	border-color:#FF99CC;
+	background-color:#FF99FF;
+}
