@@ -15,12 +15,12 @@
         </a>
         <a href="<?php echo $this->url('admin/ajoutermanuellementstudents') ?>">
             <div id="accueil_boxConteneur" class="accueil_boxColor_jaune">
-                <span>Ajouter des étudiants manuellement</span>
+                <span>Ajouter un étudiant manuellement</span>
             </div>
         </a>
         <a href="<?php echo $this->url('admin/ajouterstudentsbyCSV') ?>">
             <div id="accueil_boxConteneur" class="accueil_boxColor_vert">
-                <span>Ajouter des étudiants par csv</span>
+                <span>Importer des étudiants</span>
             </div>
         </a>
         <a href="<?php echo $this->url('admin/groupes') ?>">

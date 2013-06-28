@@ -22,7 +22,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
     }
     
 	/**
-	 * Accueil
+	 * Page d'accueil administrateur
 	 */
 	public function indexAction()
 	{
@@ -30,6 +30,232 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 		return $this->renderPage('admin/index');
 	}
 	
+    // ------------------------------------------------------------------------ //
+    //                              GERER LES ETUDIANTS                         //
+    // ------------------------------------------------------------------------ //
+
+	/**
+	 * Liste des actions pour gérer les étudiants
+	 */
+	public function studentsAction()
+	{
+		$this->params['list_title'] = 'Gestion des étudiants';
+		return $this->renderPage('admin/students');
+	}
+    
+	/**
+	 * Gérer les étudiants
+	 */
+	public function gererstudentsAction()
+	{
+		$this->params['list_title'] = 'Gérer les étudiants';
+        
+        $params = array(
+            'departement' => filter_var(@ $_REQUEST['departement'], FILTER_SANITIZE_NUMBER_INT),
+            'formation'   => filter_var(@ $_REQUEST['formation'], FILTER_SANITIZE_NUMBER_INT),
+            'semestre'    => filter_var(@ $_REQUEST['semestre'], FILTER_SANITIZE_NUMBER_INT),
+            'td'          => filter_var(@ $_REQUEST['td'], FILTER_SANITIZE_NUMBER_INT),
+            'tp'          => filter_var(@ $_REQUEST['tp'], FILTER_SANITIZE_NUMBER_INT),
+        );
+        
+        $filters = array('departements'=>array());
+        foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
+            if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
+                $filters['departements'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION && $node['parent'] == $params['departement'] )
+                $filters['formations'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_SEMESTRE && $node['parent'] == $params['formation'] )
+                $filters['semestres'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TD && $node['parent'] == $params['semestre'] )
+                $filters['td'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TP && $node['parent'] == $params['td'] )
+                $filters['tp'][] = $node;
+        }
+        
+        if ( $params['tp'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTp($params['tp']);
+        elseif ( $params['td'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTd($params['td']);
+        elseif ( $params['semestre'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllBySemestre($params['semestre']);
+        elseif ( $params['formation'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByFormation($params['formation']);
+        elseif ( $params['departement'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByDepartement($params['departement']);
+        else
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAll();
+        
+        $this->params['filters'] = & $filters;
+        $this->params['selected'] = & $params;
+        
+		return $this->renderPage('admin/gererstudent');
+	}
+
+	/**
+	 * Page Gérer les étudiants ajouter
+	 */
+	public function ajouterstudentsAction()
+	{
+		$this->params['list_title'] = 'Ajouter des étudiants';
+		return $this->renderPage('admin/ajouterstudents');
+	}
+
+	/**
+	 * Page Gérer les étudiants :  ajouter manuellement un étudiant
+	 */
+	public function ajoutermanuellementstudentsAction()
+	{
+		$this->params['list_title'] = 'Ajouter des étudiants';
+		$pretAEnvoie = true;
+		$messages = array();
+		
+        $submit = isset($_REQUEST['envoie']) && $_REQUEST['envoie'];
+		
+		if (isset($_REQUEST['typeInscrit']) && $_REQUEST['typeInscrit'])
+			$type = $_REQUEST['typeInscrit'];
+		else {
+			$type = 0;
+			
+			$pretAEnvoie = false;
+			$messages[] = "Le champs 'type' est obligatoire !";
+		}
+		$this->params['selected'] = & $type;
+		
+        //on récupère tout les champs
+		if (isset($_REQUEST['nomInscrit']) && !empty($_REQUEST['nomInscrit']))
+			$nom = $_REQUEST['nomInscrit'];
+		else {
+			$pretAEnvoie = false;
+			$messages[] = "Le nom est obligatoire !";
+		}
+		
+		if (isset($_REQUEST['prenomInscrit']) && !empty($_REQUEST['prenomInscrit']))
+			$prenom = $_REQUEST['prenomInscrit'];
+		else {
+			$pretAEnvoie = false;
+			$messages[] = "Le prénom est obligatoire !";
+		}
+		
+		if ( $type == GestionNotes_Model_User::TYPE_ETUDIANT ) {
+    		if (isset($_REQUEST['codeApogeeInscrit']) && !empty($_REQUEST['codeApogeeInscrit']))
+    			$apogee = $_REQUEST['codeApogeeInscrit'];
+    		else {
+    			$pretAEnvoie = false;
+    			$messages[] = "Le code apogée est obligatoire !";
+    		}
+		
+    		if (isset($_REQUEST['formationInscrit']) && !empty($_REQUEST['formationInscrit'])){
+    			//on a cliqué sur une formation
+    			$formation = $_REQUEST['formationInscrit'];
+    			//on récupère les semestres de la formation	et on les transmets
+    			$semestreTab = GestionNotes_Model_Node::fetchByParentNodeId($formation);
+    			$this->params['semestres'] = & $semestreTab;
+                if (isset($_REQUEST['semestreInscrit']) && !empty($_REQUEST['semestreInscrit'])) {
+                    //on a cliqué sur un semestre
+                    $semestre = $_REQUEST['semestreInscrit'];
+
+                    //on récupère les tp de celui-ci et on les transmet
+                    $tpTab = GestionNotes_Model_Formation::fetchtpBySemestreId($semestre);
+                    $this->params['tps'] = & $tpTab;
+
+                    if (isset($_REQUEST['TpInscrit']) && !empty($_REQUEST['TpInscrit'])){
+                        //on a cliqué sur un tp
+                        $tp = $_REQUEST['TpInscrit'];
+
+                        //on ajoute l'étudiant
+                        if ($pretAEnvoie && $submit){
+                            $result = GestionNotes_Model_User::addUserEtudiant($nom,$nom,$prenom,$apogee,$tp);
+                            if ($result){ //succès
+                                $messages = "L'utilisateur à bien été ajouté à la base
+                                <br/><br/>
+                                <em>Son mots de passe est <strong>'secret'</strong></em>";
+                                $this->params['messages'] = & $messages;
+                            }
+                            else {
+                                $messages[] = "Erreur dans l'enregistrement de l'utilisateur";
+                                $this->params['messages'] = & $messages;
+                            }
+                        }
+                    } else {
+                        //transmettre juste le message texte
+                        $pretAEnvoie = false;
+                        $messages[] = "Le champs 'TP' est obligatoire !";
+                    }	
+    			} else {
+    				$pretAEnvoie = false;
+    				//transmettre juste le message texte
+    				$messages[] = "Un semestre est obligatoire !";
+    			}			
+    		}	
+    		else {
+    			$pretAEnvoie = false;
+    			//transmettre juste le message texte
+    			$messages[] = "Une formation est obligatoire !";
+    		}
+		} elseif($type == GestionNotes_Model_User::TYPE_ADMIN && $submit){
+			//admin
+			if ($pretAEnvoie){
+				$result = GestionNotes_Model_User::addUserAdmin($nom,$nom,$prenom);
+				if ($result){ //succès
+					$messages = "L'utilisateur à bien été ajouté à la base
+							<br/><br/>
+							<em>Son mots de passe est <strong>'secret'</strong></em>";
+					$this->params['messages'] = & $messages;
+				}
+				else {
+					$messages[] = "Erreur dans l'enregistrement de l'utilisateur";
+					$this->params['messages'] = & $messages;
+				}
+				
+			}
+		}
+		elseif ($type == GestionNotes_Model_User::TYPE_DIRETUDE && $submit){
+			//Directeur des études
+			if ($pretAEnvoie){
+				$result = GestionNotes_Model_User::addUserDD($nom,$nom,$prenom);
+				if ($result){ //succès
+					$messages = "L'utilisateur à bien été ajouté à la base
+							<br/><br/>
+							<em>Son mots de passe est <strong>'secret'</strong></em>";
+					$this->params['messages'] = & $messages;
+				}
+				else {
+					$messages[] = "Erreur dans l'enregistrement de l'utilisateur";
+					$this->params['messages'] = & $messages;
+				}
+			}
+		}
+		
+		$nodes = GestionNotes_Model_Node::fetchByNodeType(GestionNotes_Model_User::TYPE_DIRETUDE);
+		$this->params['nodes'] = & $nodes;
+		$this->params['type'] = & $type;
+
+		//si il manque des informations
+		if ($submit)
+			if (!$pretAEnvoie)
+				$this->params['messages'] = & $messages;
+                
+		return $this->renderPage('admin/ajoutermanuellementstudents');
+	}
+
+	/**
+	 * Page Gérer les étudiants :  ajouter des étudiants par csv
+	 */
+	public function ajouterstudentsbyCSVAction()
+	{
+		$this->params['list_title'] = 'Ajouter des étudiants';
+		return $this->renderPage('admin/ajouterstudentsbyCSV');
+	}
+    
+    
+    // ------------------------------------------------------------------------ //
+    //                              GERER LES GROUPES                           //
+    // ------------------------------------------------------------------------ //
+    
+    // ------------------------------------------------------------------------ //
+    //                              GERER LES FORMATIONS                        //
+    // ------------------------------------------------------------------------ //
+    
     /**
      * Gestion des formations
      */
@@ -229,63 +455,6 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         GestionNotes_Model_Formation::delFormation($id);
         return $this->redirect($this->url('admin/groupes'));
     }
-
-	/**
-	 * Page Gérer les étudiants accueil
-	 */
-	public function studentsAction()
-	{
-		$this->params['list_title'] = 'Gestion des étudiants';
-		return $this->renderPage('admin/students');
-	}
-    
-	/**
-	 * Gérer les étudiants
-	 */
-	public function gererstudentsAction()
-	{
-		$this->params['list_title'] = 'Gérer les étudiants';
-        
-        $params = array(
-            'departement' => filter_var(@ $_REQUEST['departement'], FILTER_SANITIZE_NUMBER_INT),
-            'formation'   => filter_var(@ $_REQUEST['formation'], FILTER_SANITIZE_NUMBER_INT),
-            'semestre'    => filter_var(@ $_REQUEST['semestre'], FILTER_SANITIZE_NUMBER_INT),
-            'td'          => filter_var(@ $_REQUEST['td'], FILTER_SANITIZE_NUMBER_INT),
-            'tp'          => filter_var(@ $_REQUEST['tp'], FILTER_SANITIZE_NUMBER_INT),
-        );
-        
-        $filters = array('departements'=>array());
-        foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
-            if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
-                $filters['departements'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION && $node['parent'] == $params['departement'] )
-                $filters['formations'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_SEMESTRE && $node['parent'] == $params['formation'] )
-                $filters['semestres'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TD && $node['parent'] == $params['semestre'] )
-                $filters['td'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TP && $node['parent'] == $params['td'] )
-                $filters['tp'][] = $node;
-        }
-        
-        if ( $params['tp'] )
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTp($params['tp']);
-        elseif ( $params['td'] )
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTd($params['td']);
-        elseif ( $params['semestre'] )
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllBySemestre($params['semestre']);
-        elseif ( $params['formation'] )
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByFormation($params['formation']);
-        elseif ( $params['departement'] )
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByDepartement($params['departement']);
-        else
-            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAll();
-        
-        $this->params['filters'] = & $filters;
-        $this->params['selected'] = & $params;
-        
-		return $this->renderPage('admin/gererstudent');
-	}
     
 	/**
 	 * Page d'édition/modification d'un étudiant
@@ -294,162 +463,6 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	{
 		$this->params['list_title'] = 'Modifier un étudiant';
 		return $this->renderPage('admin/editerstudent');
-	}
-
-	/**
-	 * Page Gérer les étudiants ajouter
-	 */
-	public function ajouterstudentsAction()
-	{
-		$this->params['list_title'] = 'Ajouter des étudiants';
-		$this->redirect($this->url('admin/ajoutermanuellementstudents'));
-	}
-
-	/**
-	 * Page Gérer les étudiants :  ajouter manuellement un étudiant
-	 */
-	public function ajoutermanuellementstudentsAction()
-	{
-		$this->params['list_title'] = 'Ajouter des étudiants';
-		$pretAEnvoie = true;
-		$messages = array();
-		
-        $submit = isset($_REQUEST['envoie']) && $_REQUEST['envoie'];
-		
-		if (isset($_REQUEST['typeInscrit']) && $_REQUEST['typeInscrit'])
-			$type = $_REQUEST['typeInscrit'];
-		else {
-			$type = 0;
-			
-			$pretAEnvoie = false;
-			$messages[] = "Le champs 'type' est obligatoire !";
-		}
-		$this->params['selected'] = & $type;
-		
-        //on récupère tout les champs
-		if (isset($_REQUEST['nomInscrit']) && !empty($_REQUEST['nomInscrit']))
-			$nom = $_REQUEST['nomInscrit'];
-		else {
-			$pretAEnvoie = false;
-			$messages[] = "Le nom est obligatoire !";
-		}
-		
-		if (isset($_REQUEST['prenomInscrit']) && !empty($_REQUEST['prenomInscrit']))
-			$prenom = $_REQUEST['prenomInscrit'];
-		else {
-			$pretAEnvoie = false;
-			$messages[] = "Le prénom est obligatoire !";
-		}
-		
-		if ( $type == GestionNotes_Model_User::TYPE_ETUDIANT ) {
-    		if (isset($_REQUEST['codeApogeeInscrit']) && !empty($_REQUEST['codeApogeeInscrit']))
-    			$apogee = $_REQUEST['codeApogeeInscrit'];
-    		else {
-    			$pretAEnvoie = false;
-    			$messages[] = "Le code apogée est obligatoire !";
-    		}
-		
-    		if (isset($_REQUEST['formationInscrit']) && !empty($_REQUEST['formationInscrit'])){
-    			//on a cliqué sur une formation
-    			$formation = $_REQUEST['formationInscrit'];
-    			//on récupère les semestres de la formation	et on les transmets
-    			$semestreTab = GestionNotes_Model_Node::fetchByParentNodeId($formation);
-    			$this->params['semestres'] = & $semestreTab;
-                if (isset($_REQUEST['semestreInscrit']) && !empty($_REQUEST['semestreInscrit'])) {
-                    //on a cliqué sur un semestre
-                    $semestre = $_REQUEST['semestreInscrit'];
-
-                    //on récupère les tp de celui-ci et on les transmet
-                    $tpTab = GestionNotes_Model_Formation::fetchtpBySemestreId($semestre);
-                    $this->params['tps'] = & $tpTab;
-
-                    if (isset($_REQUEST['TpInscrit']) && !empty($_REQUEST['TpInscrit'])){
-                        //on a cliqué sur un tp
-                        $tp = $_REQUEST['TpInscrit'];
-
-                        //on ajoute l'étudiant
-                        if ($pretAEnvoie && $submit){
-                            $result = GestionNotes_Model_User::addUserEtudiant($nom,$nom,$prenom,$apogee,$tp);
-                            if ($result){ //succès
-                                $messages = "L'utilisateur à bien été ajouté à la base
-                                <br/><br/>
-                                <em>Son mots de passe est <strong>'secret'</strong></em>";
-                                $this->params['messages'] = & $messages;
-                            }
-                            else {
-                                $messages[] = "Erreur dans l'enregistrement de l'utilisateur";
-                                $this->params['messages'] = & $messages;
-                            }
-                        }
-                    } else {
-                        //transmettre juste le message texte
-                        $pretAEnvoie = false;
-                        $messages[] = "Le champs 'TP' est obligatoire !";
-                    }	
-    			} else {
-    				$pretAEnvoie = false;
-    				//transmettre juste le message texte
-    				$messages[] = "Un semestre est obligatoire !";
-    			}			
-    		}	
-    		else {
-    			$pretAEnvoie = false;
-    			//transmettre juste le message texte
-    			$messages[] = "Une formation est obligatoire !";
-    		}
-		} elseif($type == GestionNotes_Model_User::TYPE_ADMIN && $submit){
-			//admin
-			if ($pretAEnvoie){
-				$result = GestionNotes_Model_User::addUserAdmin($nom,$nom,$prenom);
-				if ($result){ //succès
-					$messages = "L'utilisateur à bien été ajouté à la base
-							<br/><br/>
-							<em>Son mots de passe est <strong>'secret'</strong></em>";
-					$this->params['messages'] = & $messages;
-				}
-				else {
-					$messages[] = "Erreur dans l'enregistrement de l'utilisateur";
-					$this->params['messages'] = & $messages;
-				}
-				
-			}
-		}
-		elseif ($type == GestionNotes_Model_User::TYPE_DIRETUDE && $submit){
-			//Directeur des études
-			if ($pretAEnvoie){
-				$result = GestionNotes_Model_User::addUserDD($nom,$nom,$prenom);
-				if ($result){ //succès
-					$messages = "L'utilisateur à bien été ajouté à la base
-							<br/><br/>
-							<em>Son mots de passe est <strong>'secret'</strong></em>";
-					$this->params['messages'] = & $messages;
-				}
-				else {
-					$messages[] = "Erreur dans l'enregistrement de l'utilisateur";
-					$this->params['messages'] = & $messages;
-				}
-			}
-		}
-		
-		$nodes = GestionNotes_Model_Node::fetchByNodeType(GestionNotes_Model_User::TYPE_DIRETUDE);
-		$this->params['nodes'] = & $nodes;
-		$this->params['type'] = & $type;
-
-		//si il manque des informations
-		if ($submit)
-			if (!$pretAEnvoie)
-				$this->params['messages'] = & $messages;
-                
-		return $this->renderPage('admin/ajoutermanuellementstudents');
-	}
-
-	/**
-	 * Page Gérer les étudiants :  ajouter des étudiants par csv
-	 */
-	public function ajouterstudentsbyCSVAction()
-	{
-		$this->params['list_title'] = 'Ajouter des étudiants';
-		return $this->renderPage('admin/ajouterstudentsbyCSV');
 	}
     
     protected function createListByNodeType(/* int */ $nodeType)
