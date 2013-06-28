@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mer 26 Juin 2013 à 12:00
+-- Généré le: Ven 28 Juin 2013 à 22:38
 -- Version du serveur: 5.5.29
 -- Version de PHP: 5.2.17
 
@@ -23,30 +23,11 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `formations`
---
-
-DROP TABLE IF EXISTS `formations`;
-CREATE TABLE IF NOT EXISTS `formations` (
-  `formation_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `formation_title` varchar(35) NOT NULL,
-  `parent_formation_id` int(10) unsigned DEFAULT NULL,
-  `parent_node_id` int(10) unsigned DEFAULT NULL,
-  `formation_type` smallint(5) unsigned NOT NULL,
-  PRIMARY KEY (`formation_id`),
-  UNIQUE KEY `formation_unq` (`formation_title`,`parent_node_id`),
-  KEY `parent_node_id` (`parent_node_id`),
-  KEY `formations_ibfk_2` (`parent_formation_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `nodes`
 --
 
 DROP TABLE IF EXISTS `nodes`;
-CREATE TABLE IF NOT EXISTS `nodes` (
+CREATE TABLE `nodes` (
   `node_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `node_title` varchar(35) NOT NULL,
   `node_type` smallint(5) unsigned NOT NULL,
@@ -54,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   `coefficient` float unsigned DEFAULT NULL,
   PRIMARY KEY (`node_id`),
   UNIQUE KEY `node_uniq` (`node_title`,`node_type`,`parent_node_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=55 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 
@@ -63,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
 --
 
 DROP TABLE IF EXISTS `notes`;
-CREATE TABLE IF NOT EXISTS `notes` (
+CREATE TABLE `notes` (
   `note_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `node_id` int(10) unsigned NOT NULL,
   `coefficient` float unsigned NOT NULL DEFAULT '1',
@@ -71,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `notes` (
   PRIMARY KEY (`note_id`),
   UNIQUE KEY `UNIQUE_note` (`coefficient`,`title`,`node_id`),
   KEY `module_id_idx` (`node_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 
@@ -80,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `notes` (
 --
 
 DROP TABLE IF EXISTS `student_notes`;
-CREATE TABLE IF NOT EXISTS `student_notes` (
+CREATE TABLE `student_notes` (
   `student_note_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `note_id` int(10) unsigned NOT NULL,
@@ -90,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `student_notes` (
   UNIQUE KEY `user_id` (`user_id`,`note_id`),
   KEY `node_id_idx` (`note_id`),
   KEY `user_id_idx` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  ;
 
 -- --------------------------------------------------------
 
@@ -99,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `student_notes` (
 --
 
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -113,18 +94,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `followed_students` text,
   PRIMARY KEY (`user_id`),
   KEY `formation_id_idx` (`formation_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
-
---
--- Contraintes pour les tables exportées
---
-
---
--- Contraintes pour la table `formations`
---
-ALTER TABLE `formations`
-  ADD CONSTRAINT `formations_ibfk_1` FOREIGN KEY (`parent_node_id`) REFERENCES `nodes` (`node_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `formations_ibfk_2` FOREIGN KEY (`parent_formation_id`) REFERENCES `formations` (`formation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
