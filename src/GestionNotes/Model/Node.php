@@ -11,13 +11,21 @@
  */
 class GestionNotes_Model_Node extends GestionNotes_Model
 {
+    // Commun aux étudiants et aux formations
     const TYPE_DEPARTEMENT  = 1;
     const TYPE_FORMATION    = 2;
     const TYPE_SEMESTRE     = 3;
+    
+    // Propre aux formations
     const TYPE_UE           = 4;
     const TYPE_MODULE       = 5;
     const TYPE_MATIERE      = 6;
     const TYPE_EPREUVE      = 7;
+    
+    // Propre aux étudiants
+    const TYPE_GROUPE_TD    = 8;
+    const TYPE_GROUPE_TP    = 9;
+    const TYPE_PARCOURS     = 10;
     
     /**
      * @var int Identifiant Node
@@ -58,6 +66,23 @@ class GestionNotes_Model_Node extends GestionNotes_Model
     }
     
     // ------------------------- OPERATIONS DE LECTURE ------------------------- //
+
+    
+    public static function fetchAll()
+    {
+        $sth = self::$db->prepare('
+            SELECT n.node_id AS id, n.node_title AS title, n.node_type AS type,
+                   n.parent_node_id AS parent, n.coefficient
+            FROM nodes AS n
+        ');
+        
+        $sth->execute();
+        
+        $result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+            $result[] = self::exchange($data);
+        return $result;
+    }
     
     /**
      * Récupère le titre du parent de l'id en paramètre

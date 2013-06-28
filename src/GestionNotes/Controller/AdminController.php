@@ -240,24 +240,49 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	}
     
 	/**
-	 * Page Gérer les étudiants gérer
+	 * Gérer les étudiants
 	 */
 	public function gererstudentsAction()
 	{
 		$this->params['list_title'] = 'Gérer les étudiants';
-		//on récupère tous les paramètres
-        $choixFormation = isset($_REQUEST['choixFormation']) ?
-            filter_var($_REQUEST['choixFormation'], FILTER_SANITIZE_NUMBER_INT) : 'tout';
-        $choixTd = isset($_REQUEST['choixTD']) ?
-            filter_var($_REQUEST['choixTD'], FILTER_SANITIZE_NUMBER_INT) : 'tout';
-		$choixTp = isset($_REQUEST['choixTP']) ?
-            filter_var($_REQUEST['choixTP'], FILTER_SANITIZE_NUMBER_INT) : 'tout';
-        $afficherMax = isset($_REQUEST['afficherMax']) ?
-            filter_var($_REQUEST['afficherMax'], FILTER_SANITIZE_NUMBER_INT) : 50;
-
-		$userTab = GestionNotes_Model_User::recupererAllUser();
-		//$userTab = GestionNotes_Model_User::recupererAllUser($choixFormation, $choixTd, $choixTp, $afficherMax);
-		$this->params['users'] = & $userTab;
+        
+        $params = array(
+            'departement' => filter_var(@ $_REQUEST['departement'], FILTER_SANITIZE_NUMBER_INT),
+            'formation'   => filter_var(@ $_REQUEST['formation'], FILTER_SANITIZE_NUMBER_INT),
+            'semestre'    => filter_var(@ $_REQUEST['semestre'], FILTER_SANITIZE_NUMBER_INT),
+            'td'          => filter_var(@ $_REQUEST['td'], FILTER_SANITIZE_NUMBER_INT),
+            'tp'          => filter_var(@ $_REQUEST['tp'], FILTER_SANITIZE_NUMBER_INT),
+        );
+        
+        $filters = array('departements'=>array());
+        foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
+            if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
+                $filters['departements'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION && $node['parent'] == $params['departement'] )
+                $filters['formations'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_SEMESTRE && $node['parent'] == $params['formation'] )
+                $filters['semestres'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TD && $node['parent'] == $params['semestre'] )
+                $filters['td'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TP && $node['parent'] == $params['td'] )
+                $filters['tp'][] = $node;
+        }
+        
+        if ( $params['tp'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTp($params['tp']);
+        elseif ( $params['td'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByTd($params['td']);
+        elseif ( $params['semestre'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllBySemestre($params['semestre']);
+        elseif ( $params['formation'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByFormation($params['formation']);
+        elseif ( $params['departement'] )
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAllByDepartement($params['departement']);
+        else
+            $this->params['users'] = GestionNotes_Model_Etudiant::fetchAll();
+        
+        $this->params['filters'] = & $filters;
+        $this->params['selected'] = & $params;
         
 		return $this->renderPage('admin/gererstudent');
 	}

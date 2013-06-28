@@ -198,6 +198,37 @@ class GestionNotes_Model_User extends GestionNotes_Model
     }
     
     /**
+     * Recherche par critères
+     *
+     * @param array $criterias
+     * @return array
+     */
+    public function fetchByCriteria(array $criterias)
+    {
+    	$sql = '
+            SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
+                u.last_name AS lastName, u.apogee_code AS apogee, u.type,
+                u.formation_id AS formation
+            FROM `users` AS u
+            WHERE type = '.self::TYPE_ETUDIANT.'
+        ';
+        
+        if ( array_key_exists('tp', $criterias) )
+            $sql .= 'AND u.formation_id = '.self::$db->quote($criterias['tp'], PDO::PARAM_INT).' ';
+        elseif ( array_key_exists('td', $criterias) )
+            $sql .= 'AND u.formation_id IN( SELECT f.formation_id FROM formations AS f WHERE f.parent_formation_id = '
+                 .  self::$db->quote($criterias['tp'], PDO::PARAM_INT).' ';
+        
+        $sth = self::$db->prepare($sql);
+    	$sth->execute();
+    
+    	$result = array();
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
+                $result[] = self::exchange($data);
+        return $result;
+    } 
+    
+    /**
      * Récupère tous les users de la base
      *
      */
