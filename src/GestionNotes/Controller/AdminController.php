@@ -14,10 +14,10 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	/**
 	 * Accueil
 	 */
-	public function accueilAction()
+	public function indexAction()
 	{
 		$this->params['list_title'] = 'Accueil';
-		return $this->renderPage('admin/accueil');
+		return $this->renderPage('admin/index');
 	}
 	
     /**

@@ -14,10 +14,10 @@ class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 	/**
 	 * Accueil
 	 */
-	public function accueilAction()
+	public function indexAction()
 	{
 		$this->params['list_title'] = 'Accueil';
-		return $this->renderPage('etudiant/accueil');
+		return $this->renderPage('etudiant/index');
 	}
     
 	public function moyennesAction()

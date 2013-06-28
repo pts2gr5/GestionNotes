@@ -15,11 +15,11 @@ class GestionNotes_Controller_DiretudeController extends GestionNotes_Controller
 	/**
 	 * Accueil
 	 */
-	public function accueilAction()
+	public function indexAction()
 	{
 		$this->params['list_title'] = 'Accueil';
 	
-		return $this->renderPage('diretude/accueil');
+		return $this->renderPage('diretude/index');
 	}
 	
 	private function favorisAction(){

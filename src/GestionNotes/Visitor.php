@@ -48,6 +48,11 @@ class GestionNotes_Visitor implements ArrayAccess
         return $this->user;
     }
     
+    public function __toString()
+    {
+        return $this->isLogged() ? $this->user['name'] : 'Visiteur';
+    }
+    
     public function offsetGet($offset)
     {
         return $this->user->offsetGet($offset);

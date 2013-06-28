@@ -38,9 +38,8 @@
 			<div class="moduleTitre"><span>Menu</span></div>
 			<div class="moduleCorps">
                 <ul>
-                    
                     <?php if ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ADMIN ): ?>
-                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/accueil') ?>">Accueil</a></li>
+                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin') ?>">Accueil</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/students') ?>">Gérer les étudiants</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/gererstudents') ?>">Gérer</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/ajouterstudents') ?>">Ajouter</a></li>
@@ -48,14 +47,14 @@
                       <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/rechercherstudent') ?>">Rechercher</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/formations') ?>">Gérer les formations</a></li>
                     <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_DIRETUDE ):  ?>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/accueil') ?>">Accueil</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude') ?>">Accueil</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/moyennes') ?>">Consulter les moyennes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude/consulterresultat') ?>">Consulter les résultats</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('diretude/apogee') ?>">Code Apogée</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('diretude/nom') ?>">Nom/Prénom</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('diretude/parcours') ?>">Parcours</a></li>
                     <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ETUDIANT ): ?>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/accueil') ?>">Accueil</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant') ?>">Accueil</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/moyennes') ?>">Consulter les moyennes</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('etudiant/notes') ?>">Gestion des notes</a></li>
                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('etudiant/ajouternote') ?>">Ajouter une note</a></li>
@@ -93,6 +92,14 @@
     </div>
     
     <div id="corps">
+        <?php if ( isset($notices) && is_array($notices) ): ?>
+        <ul>
+            <?php foreach ($notices as $notice): ?>
+            <li><?php echo $notice ?></li>
+            <?php endforeach ?>
+        </ul>
+        <?php endif ?>
+        
 	    <?php echo $content ?>
     </div>
     <?php else: ?>
