@@ -146,6 +146,20 @@ abstract class GestionNotes_Controller
     }
     
     /**
+     * Affiche un message d'erreur si la vérification echoue
+     *
+     * @param boolean $isValid
+     * @param string $message
+     */
+    public function assert($isValid, $message = null)
+    {
+        if ( false == $isValid ) {
+            echo $this->showMessage($message);
+            exit;
+        }
+    } 
+    
+    /**
      * Génère une URL
      *
      * @param string $page

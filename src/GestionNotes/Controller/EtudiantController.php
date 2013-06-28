@@ -11,6 +11,16 @@
  */ 
 class GestionNotes_Controller_EtudiantController extends GestionNotes_Controller
 {
+    protected function init()
+    {
+        parent::init();
+        
+        $this->assert(
+            $this->visitor['type'] == GestionNotes_Model_User::TYPE_ETUDIANT,
+            'Cet espace est réservé aux étudiants'
+        );
+    }
+    
 	/**
 	 * Accueil
 	 */

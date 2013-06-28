@@ -11,6 +11,15 @@
  */ 
 class GestionNotes_Controller_DiretudeController extends GestionNotes_Controller
 {
+    protected function init()
+    {
+        parent::init();
+        
+        $this->assert(
+            $this->visitor['type'] == GestionNotes_Model_User::TYPE_DIRETUDE,
+            'Cet espace est réservé aux directeurs des études'
+        );
+    }
 	
 	/**
 	 * Accueil

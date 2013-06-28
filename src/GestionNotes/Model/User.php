@@ -247,7 +247,7 @@ class GestionNotes_Model_User extends GestionNotes_Model
      * @param string $password
      * @return boolean
      */
-    public static function changePassword($password)
+    public function changePassword($password)
     {
         $sth = self::$db->prepare('
             UPDATE users AS u
