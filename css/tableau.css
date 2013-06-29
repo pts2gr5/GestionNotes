@@ -21,7 +21,7 @@ max-width: 100%;
 
 /* Petit formulaire à droite du tableau pour ajouter une note */
 
-#ajouterUneNoteACoteDuTableau {
+.ajouterUneNoteACoteDuTableau {
 	rgba(255, 255, 213, 0.84);
 	margin-left:10px;
 	float:right;
@@ -32,7 +32,7 @@ max-width: 100%;
 	text-align: center;
 }
 
-#ajouterUneNoteACoteDuTableau span{
+.ajouterUneNoteACoteDuTableau span{
 	width:100%;
 	font-size:16px;
 	font-weight:bold;
@@ -41,22 +41,22 @@ max-width: 100%;
 	clear: both;
 	
 }
-#ajouterUneNoteACoteDuTableau table{
+.ajouterUneNoteACoteDuTableau table{
 	width:100%;
 	margin:0;
 	padding:0;
 }
-#ajouterUneNoteACoteDuTableau table tr{
+.ajouterUneNoteACoteDuTableau table tr{
 	
 	font-size:15px;
 
 }
-#ajouterUneNoteACoteDuTableau table tr td{
+.ajouterUneNoteACoteDuTableau table tr td{
 	
 	margin:0;
 	padding:0;
 }
-#ajouterUneNoteACoteDuTableau form label{
+.ajouterUneNoteACoteDuTableau form label{
 	font-size:15px;
 	margin:px;
 }
