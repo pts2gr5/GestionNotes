@@ -65,6 +65,11 @@ class GestionNotes_Model_Node extends GestionNotes_Model
         return $obj;
     }
     
+    public function __toString()
+    {
+        return $this['title'];
+    }
+    
     // ------------------------- OPERATIONS DE LECTURE ------------------------- //
 
     
@@ -226,7 +231,33 @@ class GestionNotes_Model_Node extends GestionNotes_Model
             return self::exchange($data);
         else
             return false;
-    } 
+    }
+    
+    public static function fetchTreeByNodeId($nodeId)
+    {
+        $sth = self::$db->prepare('
+            SELECT 
+                tp.node_id AS tp_id, tp.node_title AS tp_title,
+                td.node_id AS tp_id, td.node_title AS td_title,
+                s.node_id AS formation_id, s.node_title AS semestre_title,
+                f.node_id AS formation_id, f.node_title AS formation_title,
+                d.node_id AS departement_id, d.node_title AS departement_title
+            FROM nodes AS tp
+            LEFT JOIN nodes AS td ON tp.parent_node_id = td.node_id
+            LEFT JOIN nodes AS s ON td.parent_node_id = s.node_id
+            LEFT JOIN nodes AS d ON s.parent_node_id = d.node_id
+            LEFT JOIN nodes AS f ON d.parent_node_id = f.node_id
+            WHERE
+                (tp.node_id = :node_id) OR (td.node_id = :node_id) OR
+                (s.node_id = :node_id) OR (f.node_id = :node_id) OR
+                (f.node_id = :node_id)
+        ');
+        
+        $sth->bindParam(':node_id', $nodeId, PDO::PARAM_INT );
+        $sth->execute();
+        
+        return $sth->fetch(PDO::FETCH_ASSOC);
+    }
     
     /**
      * Récupère toutes les épreuves d'une matière
