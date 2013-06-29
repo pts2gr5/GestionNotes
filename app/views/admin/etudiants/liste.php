@@ -4,7 +4,7 @@
     </div>
     
     <div id="corps_titreEtSousMenu_option">
-        <a onclick="window.print()"><img src="images/print.png" alt="Imprimer" /></a>
+        <a onclick="window.print()"><img src="img/print.png" alt="Imprimer" /></a>
     </div>
     
     <div id="corps_titreEtSousMenu_sousMenu">
@@ -37,10 +37,10 @@
                 <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['apogee'] ?></td> 
                 <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['lastName'] ?></td>
                 <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['firstName'] ?></td>
-                <td data-formation-id="<?php echo $user['formation'] ?>"><?php echo $user['formation'] ?></td>
+                <td data-formation-id="<?php echo $user['formation']['id'] ?>"><?php echo $user['formation']['title'] ?></td>
                 <td>
-                    <a href="<?php echo $this->url('admin/etudiants/editer',array('id'=>$user['id'])) ?>"><img src="images/icone_editer.png" alt="Editer" /></a>
-                    <a href="<?php echo $this->url('admin/etudiants/supprimer',array('id'=>$user['id'])) ?>"><img src="images/croix_rouge.png" alt="Supprimer" /></a>
+                    <a href="<?php echo $this->url('admin/etudiants/editer',array('id'=>$user['id'])) ?>"><img src="img/icone_editer.png" alt="Editer" /></a>
+                    <a href="<?php echo $this->url('admin/etudiants/supprimer',array('id'=>$user['id'])) ?>"><img src="img/croix_rouge.png" alt="Supprimer" /></a>
                 </td>
             </tr>
             <?php endforeach;?>
@@ -48,7 +48,7 @@
         </table>
         </form>
         <!-- / Liste des étudiants -->
-
+        
         <!-- Rechercher dans les étudiants -->
         <div class="ajouterUneNoteACoteDuTableau" id="rechercherEtudiants">
             <form name="filters" action="<?php echo $this->url('admin/etudiants/liste') ?>" method="post">
@@ -59,7 +59,7 @@
                         <label for="title"><?php echo $title ?></label>
                         <br /><br />
                         <select name="<?php echo $name ?>" class="select" onchange="filters.submit()">
-                            <option selected>Tout</option> 
+                            <option <?php if ( ! $selected ) echo 'selected' ?> value="">Tout</option> 
                             <?php foreach ( $choices as $choice ): ?>
                             <option value="<?php echo $choice['id'] ?>" <?php if ( $choice['id'] == $selected ) echo 'selected' ?>><?php echo utf8_decode($choice['title']) ?></option>
                             <?php endforeach ?>
@@ -68,17 +68,22 @@
                     </td>
                 </tr>
                 <?php } ?>
-                <?php !isset($filters['departements']) || show_criteria('Départements', 'departement', $filters['departements'], $selected['departement']) ?>
-                <?php !isset($filters['formations']) || show_criteria('Formations', 'formation', $filters['formations'], $selected['formation']) ?>
-                <?php !isset($filters['semestres']) || show_criteria('Semestres', 'semestre', $filters['semestres'], $selected['semestre']) ?>
-                <?php !isset($filters['td']) || show_criteria('Groupes TD', 'td', $filters['td'], $selected['td']) ?>
-                <?php !isset($filters['tp']) || show_criteria('Groupes TP', 'tp', $filters['tp'], $selected['tp']) ?>
-                <?php !isset($filters['parcours']) || show_criteria('Parcours', 'parcours', $filters['parcours'], $selected['parcours']) ?>
-                <noscript>
+                <?php
+                    if ( array_key_exists('departements', $filters) ) {
+                        show_criteria('Département','departement',$filters['departements'],$selected['departement']);
+                        if ( array_key_exists('formations', $filters) ) {
+                            show_criteria('Formation','formation',$filters['formations'],$selected['formation']);
+                            if ( array_key_exists('semestres', $filters) ) {
+                                show_criteria('Semestre','semestre',$filters['semestres'],$selected['semestre']);
+                                if ( array_key_exists('td', $filters) ) {
+                                    show_criteria('Groupe TD','td',$filters['td'],$selected['td']);
+                                    if ( array_key_exists('tp', $filters) )    
+                                        show_criteria('Groupe TP','tp',$filters['tp'],$selected['tp']);
+                    }}}}
+                ?>
                 <tr>
-                    <td><input class="INPUT_submit" type="submit" value="Filtrer"/></td>
-                </tr>
-                </noscript>
+                    <td><noscript><input class="INPUT_submit" type="submit" value="Filtrer"/></noscript></td>
+                </tr>                
             </table>
             </form>
         </div>
@@ -87,9 +92,3 @@
         <div class="ajouterUneNoteACoteDuTableau" id="informationFormation" style="display:none;visiblity:hidden"></div>
     </div>
 </div>
-
-<script type="text/javascript">
-formations_infos_url = '<?php echo $this->url('admin/promotions/infos'); ?>';
-students_infos_url = '<?php echo $this->url('admin/etudiants/infos'); ?>';
-GestionNotes.admin.etudiants_liste();
-</script>

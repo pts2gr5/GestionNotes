@@ -6,7 +6,7 @@
 
 <div id="corps_contenu">    
     <div id="corps_contenu_contenu">
-        <a href="<?php echo $this->url('admin/etudiants') ?>">
+        <a href="<?php echo $this->url('admin/etudiants/liste') ?>">
             <div id="accueil_boxConteneur" class="accueil_boxColor_bleu">
                 <span>Voir tous les étudiants</span>
             </div>
