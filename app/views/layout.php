@@ -10,7 +10,7 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="css/tableau.css" />
 	
-	<!--[if IE 7]><![endif]-->
+    <script type="text/javascript" src="<?php echo dirname($_SERVER['SCRIPT_NAME']) ?>/javascript/script.js"></script>
 </head>
 <body>
 
@@ -39,12 +39,12 @@
 			<div class="moduleCorps">
                 <ul>
                     <?php if ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_ADMIN ): ?>
-                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin') ?>">Accueil</a></li>
-                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/students') ?>">Gérer les étudiants</a></li>
-                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/gererstudents') ?>">Gérer</a></li>
-                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/ajouterstudents') ?>">Ajouter</a></li>
-                     <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/groupes') ?>">Groupes</a></li>
-                      <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/rechercherstudent') ?>">Rechercher</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin') ?>">Accueil</a></li>
+                    <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/etudiants') ?>">Gérer les étudiants</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/etudiants/liste') ?>">Liste</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/etudiants/ajouter') ?>">Ajouter</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/promotions') ?>">Promotions</a></li>
+                    <li class="moduleCorps_listeAPuce"><a href="<?php echo $this->url('admin/etudiants/rechercher') ?>">Rechercher</a></li>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('admin/formations') ?>">Gérer les formations</a></li>
                     <?php elseif ( $this->visitor['type'] == GestionNotes_Model_User::TYPE_DIRETUDE ):  ?>
                     <li class="moduleCorps_titreListeAPuce"><a href="<?php echo $this->url('diretude') ?>">Accueil</a></li>
@@ -111,7 +111,6 @@
 	<span id="footer_copyright">&copy Gestion des notes - IUT de Laval</span>
 	<span id="footer_groupe">PTS2 Groupe 5</span>
 </div>
-
 
 </body>
 </html>

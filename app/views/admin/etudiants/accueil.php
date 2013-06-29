@@ -6,8 +6,6 @@
 
 <div id="corps_contenu">    
     <div id="corps_contenu_contenu">
-        Connecté(e) en tant que <b><?php echo $this->visitor ?></b>.<br />
-
         <a href="<?php echo $this->url('admin/etudiants') ?>">
             <div id="accueil_boxConteneur" class="accueil_boxColor_bleu">
                 <span>Voir tous les étudiants</span>
@@ -33,10 +31,5 @@
                 <span>Rechercher des étudiants</span>
             </div>    
         </a>  
-        <a href="<?php echo $this->url('admin/formations') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_violet">
-                <span>Gérer les formations</span>
-            </div>    
-        </a>
     </div>
 </div>

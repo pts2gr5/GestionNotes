@@ -4,13 +4,13 @@
     </div>
     
     <div id="corps_titreEtSousMenu_option">
-        <a href="#"><img src="images/print.png" alt="Imprimer" /></a>
+        <a onclick="window.print()"><img src="images/print.png" alt="Imprimer" /></a>
     </div>
     
     <div id="corps_titreEtSousMenu_sousMenu">
         <ul>
-            <li><a href="<?php echo $this->url('admin/gererstudents') ?>">Voir tous</a></li>
-            <li><a href="<?php echo $this->url('admin/rechercherstudent') ?>">Rechercher</a></li>
+            <li><a href="<?php echo $this->url('admin/etudiants/liste') ?>">Voir tous</a></li>
+            <li><a href="<?php echo $this->url('admin/etudiants/rechercher') ?>">Rechercher</a></li>
         </ul>
     </div>
 </div>
@@ -18,38 +18,40 @@
 <div id="corps_contenu">    
     <div id="corps_contenu_contenu">
         <!-- Liste des étudiants -->
+        <form action="<?php echo $this->url('admin/etudiants/liste') ?>" method="post">
         <table class="tableauTailleMini" cellspacing="0">
         <thead>
             <tr class="entete">
-                <td>Code Apogée</td>
+                <td>&nbsp</td>
+                <td>N°Apogée</td>
                 <td>Nom</td>
                 <td>Prénom</td>
-                <td>TD</td>
-                <td>TP</td>
-                <td>Options</td>
+                <td>Formation</td>
+                <td>&nbsp;</td>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($users as $user):?>
             <tr class="hoverable">
-                <td><?php echo $user['id'] ?></td> 
-                <td><?php echo $user['lastName'] ?></td>
-                <td><?php echo $user['firstName'] ?></td>
-                <td><?php echo $user['formation'] ?></td>
-                <td><?php echo $user['formation'] ?></td>
+                <td><input type="checkbox" name="etudiants[]" value="<?php echo $user['id'] ?>" /></td>
+                <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['apogee'] ?></td> 
+                <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['lastName'] ?></td>
+                <td data-student-id="<?php echo $user['id'] ?>"><?php echo $user['firstName'] ?></td>
+                <td data-formation-id="<?php echo $user['formation'] ?>"><?php echo $user['formation'] ?></td>
                 <td>
-                    <a href="<?php echo $this->url('admin/editerstudent',array('id'=>$user['id'])) ?>"><img src="images/icone_editer.png" alt="Editer" /></a>
-                    <a href="<?php echo $this->url('admin/editerstudent',array('id'=>$user['id'])) ?>"><img src="images/croix_rouge.png" alt="Supprimer" /></a>
+                    <a href="<?php echo $this->url('admin/etudiants/editer',array('id'=>$user['id'])) ?>"><img src="images/icone_editer.png" alt="Editer" /></a>
+                    <a href="<?php echo $this->url('admin/etudiants/supprimer',array('id'=>$user['id'])) ?>"><img src="images/croix_rouge.png" alt="Supprimer" /></a>
                 </td>
             </tr>
             <?php endforeach;?>
         </tbody>
         </table>
+        </form>
         <!-- / Liste des étudiants -->
 
         <!-- Rechercher dans les étudiants -->
-        <div id="ajouterUneNoteACoteDuTableau">
-            <form name="filters" action="<?php echo $this->url('admin/gererstudents') ?>" method="post">
+        <div class="ajouterUneNoteACoteDuTableau" id="rechercherEtudiants">
+            <form name="filters" action="<?php echo $this->url('admin/etudiants/liste') ?>" method="post">
             <table class="no-border">
                 <?php function show_criteria($title, $name, array $choices, $selected) {?>
                 <tr>
@@ -59,7 +61,7 @@
                         <select name="<?php echo $name ?>" class="select" onchange="filters.submit()">
                             <option selected>Tout</option> 
                             <?php foreach ( $choices as $choice ): ?>
-                            <option value="<?php echo $choice['id'] ?>" <?php if ( $choice['id'] == $selected ) echo 'selected' ?>><?php echo $choice['title'] ?></option>
+                            <option value="<?php echo $choice['id'] ?>" <?php if ( $choice['id'] == $selected ) echo 'selected' ?>><?php echo utf8_decode($choice['title']) ?></option>
                             <?php endforeach ?>
                         </select>
                         <br /><br />
@@ -81,5 +83,13 @@
             </form>
         </div>
         <!-- / Rechercher dans les étudiants -->
+        
+        <div class="ajouterUneNoteACoteDuTableau" id="informationFormation" style="display:none;visiblity:hidden"></div>
     </div>
 </div>
+
+<script type="text/javascript">
+formations_infos_url = '<?php echo $this->url('admin/promotions/infos'); ?>';
+students_infos_url = '<?php echo $this->url('admin/etudiants/infos'); ?>';
+GestionNotes.admin.etudiants_liste();
+</script>
