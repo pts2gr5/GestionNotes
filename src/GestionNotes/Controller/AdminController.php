@@ -37,16 +37,16 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	/**
 	 * Liste des actions pour gérer les étudiants
 	 */
-	public function studentsAction()
+	public function etudiantsAction()
 	{
 		$this->params['list_title'] = 'Gestion des étudiants';
-		return $this->renderPage('admin/students');
+		return $this->renderPage('admin/etudiants/accueil');
 	}
     
 	/**
 	 * Gérer les étudiants
 	 */
-	public function gererstudentsAction()
+	public function listeEtudiantsAction()
 	{
 		$this->params['list_title'] = 'Gérer les étudiants';
         
@@ -58,7 +58,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
             'tp'          => filter_var(@ $_REQUEST['tp'], FILTER_SANITIZE_NUMBER_INT),
         );
         
-        $filters = array('departements'=>array());
+        $filters = array();
         foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
             if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
                 $filters['departements'][] = $node;
@@ -88,8 +88,32 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         $this->params['filters'] = & $filters;
         $this->params['selected'] = & $params;
         
-		return $this->renderPage('admin/gererstudent');
+		return $this->renderPage('admin/etudiants/liste');
 	}
+    
+    /**
+     * Retourne des informations sur un étudiant
+     */
+    public function infosEtudiantsAction()
+    {
+        $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        $this->params['student'] = GestionNotes_Model_Etudiant::fetchOneById($id);
+        return $this->render('admin/etudiants/infos');
+    } 
+    
+    // ------------------------------------------------------------------------ //
+    //                     GERER LES GROUPES / PROMOTIONS                       //
+    // ------------------------------------------------------------------------ //
+    
+    /**
+     * Retourne des informations sur une formation
+     */
+    public function infosPromotionsAction()
+    {
+        $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        $this->params['formation'] = GestionNotes_Model_Node::fetchTreeByNodeId($id);
+        return $this->render('admin/promotions/infos');
+    } 
 
 	/**
 	 * Page Gérer les étudiants ajouter
@@ -246,11 +270,6 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 		$this->params['list_title'] = 'Ajouter des étudiants';
 		return $this->renderPage('admin/ajouterstudentsbyCSV');
 	}
-    
-    
-    // ------------------------------------------------------------------------ //
-    //                              GERER LES GROUPES                           //
-    // ------------------------------------------------------------------------ //
     
     // ------------------------------------------------------------------------ //
     //                              GERER LES FORMATIONS                        //
