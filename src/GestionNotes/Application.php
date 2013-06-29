@@ -61,6 +61,7 @@ class GestionNotes_Application
             sprintf('mysql:host=%s;dbname=%s', $config['db']['host'], $config['db']['dbname']),
             $config['db']['user'], $config['db']['password'] );
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->exec("set names utf8");
         GestionNotes_Model::setDbAdapter($db);
         
         // Gestion des sessions/utilisateurs
