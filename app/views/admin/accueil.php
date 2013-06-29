@@ -13,7 +13,7 @@
                 <span>Voir tous les étudiants</span>
             </div>
         </a>
-        <a href="<?php echo $this->url('admin/etudiants/ajouter') ?>">
+        <a href="<?php echo $this->url('admin/etudiants/creer') ?>">
             <div id="accueil_boxConteneur" class="accueil_boxColor_jaune">
                 <span>Ajouter un étudiant manuellement</span>
             </div>
