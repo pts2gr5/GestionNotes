@@ -72,8 +72,9 @@ class GestionNotes_Model_Etudiant extends GestionNotes_Model_User
     	$sth = self::$db->prepare('
             SELECT u.user_id AS id, u.username AS name, u.email, u.first_name AS firstName,
                 u.last_name AS lastName, u.apogee_code AS apogee, u.type,
-                u.formation_id AS formation
+                u.formation_id AS formation_id, n.node_title AS formation_title
             FROM `users` AS u
+            RIGHT JOIN nodes AS n ON u.formation_id = n.node_id
             WHERE type = '.self::TYPE_ETUDIANT.' AND formation_id IN(
                 SELECT tp.node_id
                 FROM nodes AS tp
@@ -85,8 +86,10 @@ class GestionNotes_Model_Etudiant extends GestionNotes_Model_User
     	$sth->execute();
     
     	$result = array();
-        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) )
-                $result[] = self::exchange($data);
+        while ( $data = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $data['formation'] = GestionNotes_Model_Node::exchange(array('id'=>$data['formation_id'],'title'=>$data['formation_title']));
+            $result[] = self::exchange($data);
+        }
         return $result;
     }
     

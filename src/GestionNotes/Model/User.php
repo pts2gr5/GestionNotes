@@ -354,7 +354,8 @@ class GestionNotes_Model_User extends GestionNotes_Model
     
     public static function deleteUser($id)
     {
-    	//TODO
+    	$sth = self::$db->prepare('DELETE FROM users WHERE user_id = :user_id');
+        $sth->execute(array(':user_id'=>$id));
     }
     
 }

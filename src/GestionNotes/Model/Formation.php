@@ -53,17 +53,17 @@ class GestionNotes_Model_Formation extends GestionNotes_Model
     {
         $sth = self::$db->prepare('
             SELECT
-                tp.formation_id AS tp_id, tp.formation_id AS tp_title,
-                td.formation_id AS td_id, td.formation_title AS td_title,
+                tp.node_id AS tp_id, tp.node_title AS tp_title,
+                td.node_id AS td_id, td.node_title AS td_title,
                 s.node_id AS semestre_id, s.node_title AS semestre_title,
                 f.node_id AS formation_id, f.node_title AS formation_title,
                 d.node_id AS departement_id, d.node_title AS departement_title
-            FROM formations AS tp
-            RIGHT JOIN formations AS td ON tp.parent_formation_id = td.formation_id
+            FROM nodes AS tp
+            RIGHT JOIN nodes AS td ON tp.parent_node_id = td.node_id
             RIGHT JOIN nodes AS s ON td.parent_node_id = s.node_id
             RIGHT JOIN nodes AS f ON s.parent_node_id = f.node_id
             RIGHT JOIN nodes AS d ON f.parent_node_id = d.node_id
-            WHERE tp.formation_id = :formation_id
+            WHERE tp.node_id = :formation_id
         ');
         
         $sth->bindParam(':formation_id', intval($id), PDO::PARAM_INT);

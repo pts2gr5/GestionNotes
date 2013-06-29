@@ -116,7 +116,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
     public function creerEtudiantsAction()
     {
         $this->params['list_title'] = 'Créer un nouvel étudiant';
-        $this->_createEtudiantForm();
+        $htis->params['user'] = new GestionNotes_Model_User();
         return $this->renderPage('admin/etudiants/editer');
     }
     
@@ -126,7 +126,9 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
     public function editerEtudiantsAction()
     {
         $this->params['list_title'] = 'Editer un étudiant';
-        $this->_createEtudiantForm();
+        $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        $this->params['user'] = $user = GestionNotes_Model_User::fetchOneById($id);
+        $this->params['tree'] = GestionNotes_Model_Formation::fetchTreeByFormationId($user['formation']);
         return $this->renderPage('admin/etudiants/editer');
     }
     
@@ -154,35 +156,16 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
             GestionNotes_Model_Etudiant::updateEtudiant($params['id'], $params);
         
         return $this->redirect($this->url('admin/etudiants/liste'));
-    } 
+    }
     
     /**
-     * Récupère les informations nécessaires pour le formulaire d'édition/ajout
+     * Effacer un étudiant
      */
-    protected function _createEtudiantForm()
+    public function supprimerEtudiantsAction()
     {
-        $params = array(
-            'departement' => filter_var(@ $_POST['departement'], FILTER_SANITIZE_NUMBER_INT),
-            'formation'   => filter_var(@ $_POST['formation'], FILTER_SANITIZE_NUMBER_INT),
-            'semestre'    => filter_var(@ $_POST['semestre'], FILTER_SANITIZE_NUMBER_INT),
-            'td'          => filter_var(@ $_POST['td'], FILTER_SANITIZE_NUMBER_INT),
-            'tp'          => filter_var(@ $_POST['tp'], FILTER_SANITIZE_NUMBER_INT),
-        );
-        
-        foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
-            if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
-                $this->params['departements'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION && $node['parent'] == $params['departement'] )
-                $this->params['formations'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_SEMESTRE && $node['parent'] == $params['formation'] )
-                $this->params['semestres'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TD && $node['parent'] == $params['semestre'] )
-                $this->params['td'][] = $node;
-            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TP && $node['parent'] == $params['td'] )
-                $this->params['tp'][] = $node;
-        }
-        
-        $this->params['selected'] = & $params;
+        $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+        GestionNotes_Model_User::deleteUser($id);
+        return $this->redirect($this->url('admin/etudiants/liste'));
     } 
     
     // ------------------------------------------------------------------------ //
@@ -198,6 +181,25 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         $this->params['formation'] = GestionNotes_Model_Node::fetchTreeByNodeId($id);
         return $this->render('admin/promotions/infos');
     }
+    
+    /**
+     * Retourne les formations pour un jCombo
+     */
+    public function comboPromotionsAction()
+    {
+        if ( isset($_REQUEST['id']) ) {
+            $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
+            $nodes = GestionNotes_Model_Node::fetchByParentNodeId($id);
+        } else {
+            $type = filter_var(@ $_REQUEST['type'], FILTER_SANITIZE_NUMBER_INT);
+            $nodes = GestionNotes_Model_Node::fetchByNodeType($type);
+        }
+        
+        $result = array();
+        foreach ( $nodes as $node )
+            $result[ $node['id'] ] = utf8_decode($node['title']);
+        return isset($_GET['callback']) ? sprintf('%s(%s)', $_GET['callback'], json_encode($result)) : json_encode($result);
+    } 
 
 	/**
 	 * Page Gérer les étudiants :  ajouter manuellement un étudiant
