@@ -27,7 +27,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
 	public function indexAction()
 	{
 		$this->params['list_title'] = 'Accueil';
-		return $this->renderPage('admin/index');
+		return $this->renderPage('admin/accueil');
 	}
 	
     // ------------------------------------------------------------------------ //
@@ -99,6 +99,90 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
         $this->params['student'] = GestionNotes_Model_Etudiant::fetchOneById($id);
         return $this->render('admin/etudiants/infos');
+    }
+    
+    /**
+     * Page d'ajout d'un étudiant
+     */
+    public function ajouterEtudiantsAction()
+    {
+		$this->params['list_title'] = 'Ajouter des étudiants';
+		return $this->renderPage('admin/etudiants/ajouter');
+    }
+    
+    /**
+     * Ajout manuel d'un étudiant
+     */
+    public function creerEtudiantsAction()
+    {
+        $this->params['list_title'] = 'Créer un nouvel étudiant';
+        $this->_createEtudiantForm();
+        return $this->renderPage('admin/etudiants/editer');
+    }
+    
+    /**
+     * Editer un étudiant existant
+     */
+    public function editerEtudiantsAction()
+    {
+        $this->params['list_title'] = 'Editer un étudiant';
+        $this->_createEtudiantForm();
+        return $this->renderPage('admin/etudiants/editer');
+    }
+    
+    /**
+     * Enregistre un étudiant
+     */
+    public function enregistrerEtudiantsAction()
+    {
+        $params = array(
+            'id'        => filter_var(@ $_POST['id'], FILTER_SANITIZE_NUMBER_INT),
+            'nom'       => filter_var(@ $_POST['nom'], FILTER_SANITIZE_STRING),
+            'prenom'    => filter_var(@ $_POST['prenom'], FILTER_SANITIZE_STRING),
+            'email'     => filter_var(@ $_POST['email'], FILTER_SANITIZE_STRING),
+            'apogee'    => filter_var(@ $_POST['apogee'], FILTER_SANITIZE_STRING),
+            'password'  => filter_var(@ $_POST['password'], FILTER_SANITIZE_STRING),
+            // Seul l'ID TP nous intéresse, le reste (formation, dpt, etc.) s'en déduit.
+            'formation' => filter_var(@ $_POST['tp'], FILTER_SANITIZE_NUMBER_INT),
+        );
+        
+        if ( ! $params['id'] )
+            // Création d'un nouvel étudiant
+            GestionNotes_Model_Etudiant::creerEtudiant($params);
+        else
+            // Mise à jour d'un étudiant existant
+            GestionNotes_Model_Etudiant::updateEtudiant($params['id'], $params);
+        
+        return $this->redirect($this->url('admin/etudiants/liste'));
+    } 
+    
+    /**
+     * Récupère les informations nécessaires pour le formulaire d'édition/ajout
+     */
+    protected function _createEtudiantForm()
+    {
+        $params = array(
+            'departement' => filter_var(@ $_POST['departement'], FILTER_SANITIZE_NUMBER_INT),
+            'formation'   => filter_var(@ $_POST['formation'], FILTER_SANITIZE_NUMBER_INT),
+            'semestre'    => filter_var(@ $_POST['semestre'], FILTER_SANITIZE_NUMBER_INT),
+            'td'          => filter_var(@ $_POST['td'], FILTER_SANITIZE_NUMBER_INT),
+            'tp'          => filter_var(@ $_POST['tp'], FILTER_SANITIZE_NUMBER_INT),
+        );
+        
+        foreach ( GestionNotes_Model_Node::fetchAll() as $node ) {
+            if ( $node['type'] == GestionNotes_Model_Node::TYPE_DEPARTEMENT )
+                $this->params['departements'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_FORMATION && $node['parent'] == $params['departement'] )
+                $this->params['formations'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_SEMESTRE && $node['parent'] == $params['formation'] )
+                $this->params['semestres'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TD && $node['parent'] == $params['semestre'] )
+                $this->params['td'][] = $node;
+            elseif ( $node['type'] == GestionNotes_Model_Node::TYPE_GROUPE_TP && $node['parent'] == $params['td'] )
+                $this->params['tp'][] = $node;
+        }
+        
+        $this->params['selected'] = & $params;
     } 
     
     // ------------------------------------------------------------------------ //
@@ -113,16 +197,7 @@ class GestionNotes_Controller_AdminController extends GestionNotes_Controller
         $id = filter_var(@ $_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT);
         $this->params['formation'] = GestionNotes_Model_Node::fetchTreeByNodeId($id);
         return $this->render('admin/promotions/infos');
-    } 
-
-	/**
-	 * Page Gérer les étudiants ajouter
-	 */
-	public function ajouterstudentsAction()
-	{
-		$this->params['list_title'] = 'Ajouter des étudiants';
-		return $this->renderPage('admin/ajouterstudents');
-	}
+    }
 
 	/**
 	 * Page Gérer les étudiants :  ajouter manuellement un étudiant
