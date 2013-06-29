@@ -121,8 +121,14 @@ abstract class GestionNotes_Controller
     {
         $obj = new GestionNotes_Controller_IndexController($app);
         
-        $msg = '<h1 style="font-size:x-large;">Oops :(</h1>
-                <br />
+        $msg = '
+                <div id="corps_titreEtSousMenu">
+                <div id="corps_titreEtSousMenu_titre">
+                    <h1 style="font-size:x-large;">Oops :(</h1>
+                </div>
+                </div>
+                <div id="corps_contenu">
+                <div id="corps_contenu_contenu">
                 <p>Impossible de trouver la page demandée.</p>';
         
         if ( ini_get('display_errors') && (error_reporting() & E_USER_ERROR) )
@@ -142,6 +148,7 @@ abstract class GestionNotes_Controller
                 </p>";
         }
 
+        $msg .= '</div></div>';
         return $obj->showMessage($msg);
     }
     
