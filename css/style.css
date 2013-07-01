@@ -132,6 +132,67 @@ div.content select[disabled="disabled"] {
     padding: 7px 9px;
 }
 
+/* --------------------- GRILLE FONCTIONNALITES --------------------- */
+
+.box-container {
+	float:left;
+	opacity:0.9;
+	margin:15px 0;
+	width:150px;
+	height:150px;
+	text-align:center;
+	vertical-align: middle;
+	border-width:2px;
+	border-style:solid;
+	line-height: 150px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	color:#3C3C3C;
+	font-weight:bold;
+}
+.box-container:hover {
+	cursor:pointer;
+	color:#444444;
+	opacity:1;
+}
+.box-container span { 
+    width:100px; 
+    vertical-align:middle;
+    display:inline-block;
+    line-height:1.2; 
+    text-align:center; 
+}
+.box-container-yellow {
+	border-color:#FEE796;
+	background-color:#FFFFBB;
+}
+
+.box-container-green {
+	border-color:#BBFE96;
+	background-color:#D3FFBB;
+}
+
+.box-container-blue {
+	border-color:rgba(150, 208, 254, 0.5);
+	background-color:rgba(187, 211, 255, 0.65);
+}
+
+.box-container-red {
+	border-color:rgba(254, 167, 150, 0.4);
+	background-color:rgba(255, 190, 187, 0.81);
+}
+
+.box-container-gray {
+	border-color:#D8D8D8;
+	background-color:#E7E7E7;
+}
+
+.box-container-purple {
+	border-color:#FF99CC;
+	background-color:#FF99FF;
+}
+
 /* --------------------- FOOTER --------------------- */
 
 .footer {
