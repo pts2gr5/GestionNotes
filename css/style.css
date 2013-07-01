@@ -151,21 +151,25 @@ div.content select[disabled="disabled"] {
 	color:#3C3C3C;
 	font-weight:bold;
 }
+
 .box-container:hover {
-	cursor:pointer;
-	color:#444444;
-	opacity:1;
+    cursor:pointer;
+    color:#444444;
+    opacity:1;
 }
+
 .box-container span { 
     width:100px; 
+	color:#494949;
     vertical-align:middle;
     display:inline-block;
     line-height:1.2; 
     text-align:center; 
 }
+
 .box-container-yellow {
-	border-color:#FEE796;
-	background-color:#FFFFBB;
+    border-color:#FEE796;
+    background-color:#FFFFBB;
 }
 
 .box-container-green {
@@ -174,23 +178,23 @@ div.content select[disabled="disabled"] {
 }
 
 .box-container-blue {
-	border-color:rgba(150, 208, 254, 0.5);
-	background-color:rgba(187, 211, 255, 0.65);
+    border-color:rgba(150, 208, 254, 0.5);
+    background-color:rgba(187, 211, 255, 0.65);
 }
 
 .box-container-red {
-	border-color:rgba(254, 167, 150, 0.4);
-	background-color:rgba(255, 190, 187, 0.81);
+    border-color:rgba(254, 167, 150, 0.4);
+    background-color:rgba(255, 190, 187, 0.81);
 }
 
 .box-container-gray {
-	border-color:#D8D8D8;
-	background-color:#E7E7E7;
+    border-color:#D8D8D8;
+    background-color:#E7E7E7;
 }
 
 .box-container-purple {
-	border-color:#FF99CC;
-	background-color:#FF99FF;
+    border-color:#FF99CC;
+    background-color:#FF99FF;
 }
 
 /* --------------------- FOOTER --------------------- */
