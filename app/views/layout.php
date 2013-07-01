@@ -85,10 +85,15 @@
         <?php endif ?>
     </div>
     </div>
-<div id="footer">
-	<span id="footer_copyright">&copy Gestion des notes - IUT de Laval</span>
-	<span id="footer_groupe">PTS2 Groupe 5</span>
-</div>
+
+    <div class="footer">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span8"><span class="footer_copyright">&copy Gestion des notes - IUT de Laval</span></div>
+            <div class="span4"><span class="footer_groupe">PTS2 Groupe 5</span></div>
+        </div>
+    </div>
+    </div>
 
 </body>
 </html>
