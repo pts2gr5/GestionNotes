@@ -4,32 +4,34 @@
     </div>
 </div>
 
-<div id="corps_contenu">    
-    <div id="corps_contenu_contenu">
+<div class="container-fluid">
+<div class="row-fluid">
+    <div class="span3 box-container box-container-blue">
         <a href="<?php echo $this->url('admin/etudiants/liste') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_bleu">
-                <span>Voir tous les étudiants</span>
-            </div>
+            <span>Voir tous les étudiants</span>
         </a>
+    </div>
+    <div class="span3 box-container box-container-yellow">
         <a href="<?php echo $this->url('admin/etudiants/creer') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_jaune">
-                <span>Ajouter un étudiant manuellement</span>
-            </div>
+            <span>Ajouter un étudiant manuellement</span>
         </a>
+    </div>
+    <div class="span3 box-container box-container-green">
         <a href="<?php echo $this->url('admin/etudiants/importer') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_vert">
-                <span>Importer des étudiants</span>
-            </div>
+            <span>Importer des étudiants</span>
         </a>
+    </div>
+    <div class="span3 box-container box-container-red">
         <a href="<?php echo $this->url('admin/promotions') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_rouge">
-                <span>Gérer les promotions d'étudiants</span>
-            </div>
+            <span>Gérer les promotions d'étudiants</span>
         </a>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span3 box-container box-container-gray">
         <a href="<?php echo $this->url('admin/etudiants/rechercher') ?>">
-            <div id="accueil_boxConteneur" class="accueil_boxColor_gris">
-                <span>Rechercher des étudiants</span>
-            </div>    
+            <span>Rechercher des étudiants</span>
         </a>  
     </div>
+</div>
 </div>
